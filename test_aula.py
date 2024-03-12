@@ -10,22 +10,22 @@ class solucaoPressPress:
         self.phi = phi 
         self.mi = mi
         self.k = k 
-        self.L = L
-        self.c = c
+        self.l = L
+        self.ct = c
 
     def PressPress(self, x, t):
 
-        p = np.zeros((len(x), len(t)))
+        p = np.zeros(len(x))
         sum = 0 
         sum_old = 100
-        err = 100
-        eppara = 10**-3
-        n = 1 
-        while err > eppara:
-            sum = sum + np.exp(- (n*np.pi/self.L)**2*(self.k/(self.phi*self.mi*self.c))*t)*np.sin(n*np.pi*x/self.L)
-            n = n + 1
-            err = abs((sum - sum_old)/sum) * 100
-            sum_old = sum 
-        p = (self.po - self.pw) * (x/self.L + 2/np.pi * sum) 
-
+        err = 1000
+        eppara = 1e-3
+        n = 0
+        while err >= eppara:
+            n += 1
+            i = n-1
+            sum += (np.exp(-((n*np.pi/self.l)**2)*(self.k/(self.phi*self.mi*self.ct))*t)/n*np.sin(n*np.pi*x/self.l))
+            err = abs((sum[i]-sum_old)/sum[i])*100
+            sum_old = sum[i]
+        p = (self.po - self.pw)*((x/self.l)+(2/np.pi)*sum)+self.pw
         return p

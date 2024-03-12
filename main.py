@@ -13,7 +13,11 @@ A = 2000 # m²
 x = np.linspace(0,L,1000)
 t = np.linspace(0,100,10)
 
-solucao = solucaoPressPress(p0,pw,phi,mi,k,L,c)
+solucaoPP = solucaoPressPress(p0,pw,phi,mi,k,L,c)
+solucaoFP = solucaoFluxoPressao(po,qw,phi,mi,k,L,c)
+pPP = np.zeros((len(t), len(x)))
+pFP = np.zeros((len(t), len(x)))
+for i in range(1,len())
 
 p = solucao.PressPress(x,t)
 print(p)
