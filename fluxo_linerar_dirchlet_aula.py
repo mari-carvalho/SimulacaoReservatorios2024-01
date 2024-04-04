@@ -1,7 +1,10 @@
-# classes:
-#Dirchlet:
-import numpy as np
-import scipy as sp 
+# Fluxo Linear com Condição de Contorno Pressão-Pressão (Dirchlet)
+
+# Importando as Bibliotecas:
+
+import numpy as np 
+import math as mt
+import matplotlib.pyplot as plt
 
 class solucaoPressPress:
     def __init__(self, p0, pw, phi, mi, k, L, c):

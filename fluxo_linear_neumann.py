@@ -9,16 +9,6 @@ import matplotlib.pyplot as plt
 
 # Dados de Entrada:
 
-#k = 100 # md
-#mi = 3 # cp
-#phi = 0.20  
-#c = 130*10**-6 # (kgf/cm²)-1
-#p0 = 110 # kgf/cm²
-#pw = 50 # kgf/cm²
-#qw = 35 # m³std/d
-#L = 200 # m 
-#A = 20 # m²
-
 p0 = 19000000
 pw = 9000000
 qw = 0.01
@@ -46,7 +36,6 @@ def calculate_difusividade(k:float, phi:float, mi:float, c:float) -> float:
 def calculate_neumann(p0:float, qw:float, mi:float, L:float, k:float, A:float, difusividade:float, x:float, t:float) -> float:
 
     p_neumann = p0 - qw*mi*L/(k*A)*(np.sqrt(4*difusividade*t[i]/(np.pi*L**2))*mt.exp(-x[j]**2/(4*difusividade*t[i]))-x[j]/L*erfc(x[j]/np.sqrt(4*difusividade*t[i])))
-    #p0 - ((qw*mi*L)/(k*A)) * ((mt.sqrt((4*difusividade*t[i])/(mt.pi*(L**2)))) * (mt.exp((-x[j]**2)/(4*difusividade*t[i]))) - (x[j]/L)*(erfc((x[j])/(mt.sqrt(4*difusividade*t[i])))))
                 
     return p_neumann
 
@@ -55,8 +44,8 @@ def calculate_neumann(p0:float, qw:float, mi:float, L:float, k:float, A:float, d
 difusividade = calculate_difusividade(k, phi, mi, c)
 print('difusividade', difusividade)
 
-for i in range(len(t)): # t
-    for j in range(len(x)): # x
+for i in range(len(t)): # t para cada linha vai calcular um vetor de pressões de acordo com a posição x da coluna 
+    for j in range(len(x)): # x para cada posição de x (coluna) vai calcular um valor de pressão e ao final vai resultar em todo um vetor de pressões 
         if i == 0:
             p_neumann_matriz[i,j] = p0 
         else:
