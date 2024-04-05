@@ -17,22 +17,43 @@ k = 9.869233e-14
 h = 10 
 phi = 0.2
 c = 2.04e-9
-L = 20
+L = 10
 A = 30  
 x0 = 0
 xf = L
-x_elementos = 10
 t0 = 0
-tf = 10
-t_elementos = 10
-delta_t = (tf-t0)/t_elementos # é o passo, delta t 
-delta_x = (xf-x0)/x_elementos
-print('delta_x', delta_x)
-print('delta_t', delta_t)
+tf = 100
+h_t = 0.25
+h_x = 0.5
 
-x = np.zeros(x_elementos) # de 0 ao tamanho do reservatório com 10 elementos na malha 
-t = np.zeros(t_elementos) # de 0 a 10 segundos com 10 elementos
-p = np.zeros((x_elementos,t_elementos))
+n_x = (xf-x0)/(h_x)
+n_t = (tf-t0)/(h_t)
+
+x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
+t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
+p = np.zeros((int(n_t)+1,int(n_x)+1))
+
+# Alimentando os vetores:
+for i in range(len(x)):
+    if i == 0:
+        x[i] = x0
+    elif i == 1:
+        x[i] = i*(h_x/2)
+    elif i == len(x):
+        x[i] = L 
+    elif i == len(x)-1:
+        x[i] = x[i-1] + (h_x/2)
+    else:
+        x[i] = x[i-1] + h_x
+        
+for i in range(len(t)):
+    if i == 0:
+        t[i] = t0
+    elif i == len(t):
+        t[i] = tf
+    else:
+        t[i] = i*h_t      
+
 print('x', x)
 print('t', t)
 print('p', p)
@@ -44,52 +65,46 @@ def calculate_eta(k:float, phi:float, mi:float, c:float) -> float:
 
 eta = calculate_eta(k,phi,mi,c)
 
-def calculate_rx(delta_t:float, delta_x:float) -> float:
-    rx = (delta_t)/(delta_x**2)
+def calculate_rx(h_t:float, h_x:float) -> float:
+    rx = (h_t)/(h_x**2)
 
     return rx 
 
-rx = calculate_rx(delta_t, delta_x)
+rx = calculate_rx(h_t, h_x)
 
 # Criando o método MDF de FTCS:
 
-for i in range(t_elementos):
-    for j in range(x_elementos):
+for i in range(len(t)): # varre as linhas
+    for j in range(len(x)): # varre as colunas 
         if entrada == pw and saida == p0:
-            if j == 0:
-                p[j, i+delta_t] = pw
-            elif j == 1: # bloco 1
-                p[j, i+delta_t] = (8/3)*eta*rx*pw + (1-(4*eta*rx))*p[1,i] + (4/3)*eta*rx*p[2,i]
-            elif j == len(x): # bloco N 
-                p[j, i+delta_t] = (4/3)*eta*rx*p[j-1,i] + (1-4*eta*rx)*p[j,i] + (8/3)*eta*rx*p0
-            elif j == len(x) + 1: # N+1
-                p[j, i+delta_t] = p0
-            else: # blocos interiores 
-                p[j, i+delta_t] = eta*rx*p[j-1,i] + (1-2*eta*rx)*p[j,i] + eta*rx*p[j+1,i]
-        if entrada == qw and saida == p0:
-            if j == 0:
-                p[j, i+delta_t] = qw
-            elif j == 1: # bloco 1
-                p[j, i+delta_t] = eta*rx*p[2,i] + (1-eta*rx)*p[1,i] + eta*rx*qw*((mi*delta_x)/(k*A))
-            elif j == len(x): #bloco N
-                p[j, i+delta_t] = (4/3)*eta*rx*p[j-1,i] + (1-4*eta*rx)*p[j,i] + (8/3)*eta*rx*p0
-            elif j == len(x) + 1: # N+1
-                p[j, i+delta_t] = p0
-            else: # blocos interiores
-                p[j, i+delta_t] = eta*rx*p[j-1,i] + (1-2*eta*rx)*p[j,i] + eta*rx*p[j+1,i]
-        if entrada == qw and saida == q0:
-            if j == 0:
-                p[j, i+delta_t] = qw
-            elif j == 1: # bloco 1
-                p[j, i+delta_t] = eta*rx*p[2,j] + (1-eta*rx)*p[1,j] + eta*rx*qw*((mi*delta_x)/(k*A))
-            elif j == len(x): #bloco N
-                p[j, i+delta_t] = -eta*rx*p[j-1,i] + (1+eta*rx)*p[j,i] - eta*rx*q0*((mi*delta_x)/(k*A))
-            elif j == len(x) + 1: # N+1
-                p[j, i+delta_t] = p0
-            else: # blocos interiores
-                p[j, i+delta_t] = eta*rx*p[j-1,i] + (1-2*eta*rx)*p[j,i] + eta*rx*p[j+1,i]
-        x[j+1] = x[j] + delta_x
-    t[i+1] = t[i] + delta_t
+            if i == 0: # tempo zero 
+                p[i,j] = p0
+            else: # tempo diferente de zero 
+                if j == 0:
+                    p[i,j] = pw
+                elif j == len(x):
+                    p[i,j] = p0
+                else:
+                    if j == 1: # bloco 1
+                        p[i,j] = (8/3)*eta*rx*pw + (1-4*eta*rx)*p[i-1,j] + (4/3)*eta*rx*p[i-1,j+1]
+                    elif j == len(x)-2: # bloco N 
+                        p[i,j] = (4/3)*eta*rx*p[i-1,j-1] + (1-4*eta*rx)*p[i-1,j] + (8/3)*eta*rx*p0
+                    elif j == len(x)-1: # N+1
+                        p[i,j] = p0
+                    else: # blocos interiores 
+                        p[i,j] = eta*rx*p[i-1,j-1] + (1-2*eta*rx)*p[i-1,j] + eta*rx*p[i-1,j+1]
 
+print(p)
             
+# Plotagem:
+time = [0,10,20,30,40,50,60,70,80,90,100]
+for i in range(len(t)):
+    if t[i] in time:
+        plt.plot(x, p[i, :], linestyle='-', label=f't = {t[i]}')
+
+plt.legend()
+plt.xlabel('Comprimento (m)')
+plt.ylabel('Pressão (psia)')
+plt.grid()
+plt.show()
 
