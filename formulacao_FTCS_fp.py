@@ -17,7 +17,7 @@ k = 9.869233e-14
 h = 10 
 phi = 0.2
 c = 2.04e-9
-L = 10
+L = 20
 A = 30  
 x0 = 0
 xf = L
@@ -80,7 +80,7 @@ for i in range(len(t)): # varre as linhas
             p[i,j] = p0
         else: # tempo diferente de zero 
             if j == 0:
-                p[i,j] = p[i-1,j] - (((qw*mi)/(x[j]*A))*(h_x/2))
+                p[i,j] = p[i-1,j+1] - (((qw*mi)/(k*A))*(h_x/2))
             else:
                 if j == 1: # bloco 1
                     p[i,j] = eta*rx*p[i-1,j+1] + (1-eta*rx)*p[i-1,j] - (eta*rx*((qw*mi*h_x)/(k*A)))
