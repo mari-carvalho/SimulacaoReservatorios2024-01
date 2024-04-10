@@ -76,23 +76,20 @@ rx = calculate_rx(h_t, h_x)
 
 for i in range(len(t)): # varre as linhas
     for j in range(len(x)): # varre as colunas 
-        if entrada == pw and saida == p0:
-            if i == 0: # tempo zero 
-                p[i,j] = p0
-            else: # tempo diferente de zero 
-                if j == 0:
-                    p[i,j] = pw
-                elif j == len(x):
+        if i == 0: # tempo zero 
+            p[i,j] = p0
+        else: # tempo diferente de zero 
+            if j == 0:
+                p[i,j] = p[i-1,j] - (((qw*mi)/(x[j]*A))*(h_x/2))
+            else:
+                if j == 1: # bloco 1
+                    p[i,j] = eta*rx*p[i-1,j+1] + (1-eta*rx)*p[i-1,j] - (eta*rx*((qw*mi*h_x)/(k*A)))
+                elif j == len(x)-2: # bloco N 
+                    p[i,j] = (4/3)*eta*rx*p[i-1,j-1] + (1-4*eta*rx)*p[i-1,j] + (8/3)*eta*rx*p0
+                elif j == len(x)-1: # N+1
                     p[i,j] = p0
-                else:
-                    if j == 1: # bloco 1
-                        p[i,j] = (8/3)*eta*rx*pw + (1-4*eta*rx)*p[i-1,j] + (4/3)*eta*rx*p[i-1,j+1]
-                    elif j == len(x)-2: # bloco N 
-                        p[i,j] = (4/3)*eta*rx*p[i-1,j-1] + (1-4*eta*rx)*p[i-1,j] + (8/3)*eta*rx*p0
-                    elif j == len(x)-1: # N+1
-                        p[i,j] = p0
-                    else: # blocos interiores 
-                        p[i,j] = eta*rx*p[i-1,j-1] + (1-2*eta*rx)*p[i-1,j] + eta*rx*p[i-1,j+1]
+                else: # blocos interiores 
+                    p[i,j] = eta*rx*p[i-1,j-1] + (1-2*eta*rx)*p[i-1,j] + eta*rx*p[i-1,j+1]
 
 print(p)
             
@@ -107,4 +104,3 @@ plt.xlabel('Comprimento (m)')
 plt.ylabel('Pressão (psia)')
 plt.grid()
 plt.show()
-
