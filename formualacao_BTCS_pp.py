@@ -3,6 +3,8 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 import sympy as sp 
+from solver_gauss_seidel import gauss_seidel
+
 
 # Definindo as Variáveis de Entrada:
 
@@ -74,23 +76,45 @@ rx = calculate_rx(h_t, h_x)
 
 # Criando o método MDF de BTCS:
 
+# Critérios de Scarvorought, 1966:
+n = 12 
+Eppara = 0.5*10**12-n
+
+# Número Máximo de Interações:
+maxit = 1000
+
 ai = -eta*rx 
 bi = 1 + 2*rx*eta
 an = -(4/3)*rx*eta
 b1 = 1 + 4*rx*eta
 
+p_coeficientes = np.zeros((int(n_x), int(n_x)))
+p_old = np.ones(int(n_x))*p0 # vai atualizar cada linha da matriz 
+p_solucoes = np.zeros((int(n_t)+1, int(n_x)))
+d = np.zeros(int(n_x)) # vai guardar os valores de p no tempo anterior mais 8/3*eta*rx*(Pw ou P0)
+p_solucoes[h, :]  = p0
+
 for i in range(len(x)): # variando a linha
     if i == 0:
-        p[i,0] = b1
-        p[i,1] = an
+        p_coeficientes[i,0] = b1
+        p_coeficientes[i,1] = an
+        d[i] = p_old[i] + 8/3*rx*eta*pw
     elif i == len(x)-1: # o último, N+1
-        p[i,len(x)-2] = an 
-        p[i,len(x)-1] = b1
+        p_coeficientes[i,len(x)-2] = an 
+        p_coeficientes[i,len(x)-1] = b1
+        d[i] = p_old[i] + 8/3*rx*eta*p0
     else:
         print(i)
-        p[i,i-1] = ai # linha 1, coluna 0 (i-1)
-        p[i,i] = bi
-        p[i,i+1] = ai
+        p_coeficientes[i,i-1] = ai # linha 1, coluna 0 (i-1)
+        p_coeficientes[i,i] = bi
+        p_coeficientes[i,i+1] = ai
+        d[i] = p_old[i] # condição central é 0 
+
+    x0 = p_old # os primeiros valores de chute inicial vão ser os valores de p calculadas no tempo anterior 
+    p_new = gauss_seidel(p_coeficientes,d,x0,Eppara,maxit)
+    p_old = p_new # atualiza a matriz, coloca o vetor de pressões calculado no tempo anterior (p_new) em p_old 
+    p_solucoes[h, :] = p_new # vai guardar na matriz de solucoes todos os vetores de pressão calculados nos tempos 
             
-print(p)
+print(p_solucoes)
+
 

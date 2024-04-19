@@ -96,3 +96,4 @@ for i in range(len(x)): # variando a linha
         p[i,i+1] = ai
             
 print(p)
+
