@@ -78,7 +78,7 @@ rx = calculate_rx(h_t, h_x)
 
 # Critérios de Scarvorought, 1966:
 n = 12 
-Eppara = 0.5*10**12-n
+Eppara = 0.5*10**-n
 
 # Número Máximo de Interações:
 maxit = 1000
@@ -88,10 +88,11 @@ bi = 1 + 2*rx*eta
 an = -(4/3)*rx*eta
 b1 = 1 + 4*rx*eta
 
-p_coeficientes = np.zeros((int(n_x), int(n_x)))
-p_old = np.ones(int(n_x))*p0 # vai atualizar cada linha da matriz 
-p_solucoes = np.zeros((int(n_t)+1, int(n_x)))
-d = np.zeros(int(n_x)) # vai guardar os valores de p no tempo anterior mais 8/3*eta*rx*(Pw ou P0)
+p_coeficientes = np.zeros((int(n_x)+1, int(n_x)+1))
+p_old = np.ones(int(n_x)+1)*p0 # vai atualizar cada linha da matriz 
+p_solucoes = np.zeros((int(n_t)+1, int(n_x)+1))
+d = np.zeros(int(n_x)+1) # vai guardar os valores de p no tempo anterior mais 8/3*eta*rx*(Pw ou P0)
+h = 0 
 p_solucoes[h, :]  = p0
 
 for i in range(len(x)): # variando a linha
