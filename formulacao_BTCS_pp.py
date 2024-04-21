@@ -1,7 +1,7 @@
 # Formulação Explícita BTCS:
 
-def calculate_BTCS_ff(p0,pw,qw,q0,entrada,saida,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
-
+def calculate_BTCS_pp(p0,pw,qw,q0,entrada,saida,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
+    
     import numpy as np
     import matplotlib.pyplot as plt 
     import sympy as sp 
@@ -9,9 +9,11 @@ def calculate_BTCS_ff(p0,pw,qw,q0,entrada,saida,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t
 
     n_x = (xf-x0)/(h_x)
     n_t = (tf-t0)/(h_t)
+    print('n_x',n_x)
+    print('n_t',n_t)
 
-    x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
-    t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
+    x = np.zeros(int(n_x)+1)  
+    t = np.zeros(int(n_t)+1) 
 
     # Alimentando os vetores:
     for i in range(len(x)):
@@ -62,10 +64,8 @@ def calculate_BTCS_ff(p0,pw,qw,q0,entrada,saida,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t
 
     ai = -eta*rx 
     bi = 1 + 2*rx*eta
-    an = -rx*eta
-    b1 = 1 + rx*eta
-    bn = eta*rx
-    ci = 1 - rx*eta
+    an = -(4/3)*rx*eta
+    b1 = 1 + 4*rx*eta
 
     p_coeficientes = np.zeros((int(n_x)+1, int(n_x)+1)) # a matriz de coeficientes deve ser quadrada
     p_old = np.ones(int(n_x)+1)*p0 # vai atualizar cada linha da matriz 
@@ -77,26 +77,26 @@ def calculate_BTCS_ff(p0,pw,qw,q0,entrada,saida,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t
     for j in range(len(t)): # 0 a 4 (tamanho de t), tempo 4 elemento 5; 1 a 4 (tamanho de t, mesmo for), tempo 4 elemento 4; precisa de mais um elemento
         h = h + 1 
         p_coeficientes = np.zeros((int(n_x)+1, int(n_x)+1))
-        for i in range(len(x)): # variando a linha
+        for i in range(len(x)): # variando a coluna e linha
             if i == 0:
                 p_coeficientes[i,0] = b1
                 p_coeficientes[i,1] = an
-                d[i] = p_old[i] + rx*eta*((mi*h_x*qw)/(k*A))
+                d[i] = p_old[i] + 8/3*rx*eta*pw
             elif i == len(x)-1: # o último, N
-                p_coeficientes[i,len(x)-2] = bn 
-                p_coeficientes[i,len(x)-1] = ci
-                d[i] = p_old[i] - rx*eta*((mi*h_x*qw)/(k*A))
+                p_coeficientes[i,len(x)-2] = an 
+                p_coeficientes[i,len(x)-1] = b1
+                d[i] = p_old[i] + 8/3*rx*eta*p0
             else:
                 p_coeficientes[i,i-1] = ai # linha 1, coluna 0 (i-1)
                 p_coeficientes[i,i] = bi
                 p_coeficientes[i,i+1] = ai
-                d[i] = p_old[i] # condição central é 0
+                d[i] = p_old[i] # condição central é 0 
+        
         x0 = p_old # os primeiros valores de chute inicial vão ser os valores de p calculadas no tempo anterior 
         p_new = gauss_seidel(p_coeficientes,d,x0,Eppara,maxit)
         p_old = p_new # atualiza a matriz, coloca o vetor de pressões calculado no tempo anterior (p_new) em p_old 
         p_solucoes[h, :] = p_new # vai guardar na matriz de solucoes todos os vetores de pressão calculados nos tempos 
             
-                
     print(p_solucoes)
 
     # Plotagem:
