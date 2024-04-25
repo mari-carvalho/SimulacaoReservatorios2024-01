@@ -29,3 +29,4 @@ h_x = 0.5
 #calc_FTCS = FTCS.calculate_FTCS_pp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
 #calc_BTCS = BTCS.calculate_BTCS_pp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
 calc_BTCS = BTCS.calculate_BTCS_fp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
+calc_BTCS = BTCS.calculate_BTCS_ff(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
