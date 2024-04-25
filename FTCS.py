@@ -1,13 +1,5 @@
 class FTCS():
 
-    def calculate(self,p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
-        if cc == 'pp':
-            self.calculate_FTCS_pp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
-        elif cc == 'fp':
-            self.calculate_FTCS_fp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
-        elif cc == 'ff':
-            self.calculate_FTCS_ff(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
-
     def calculate_FTCS_pp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
 
         import numpy as np
