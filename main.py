@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from solver_gauss_seidel import gauss_seidel
 from FTCS import FTCS
 from BTCS import BTCS
+from CN import CN 
 
 # Definindo as Variáveis de Entrada:
 
@@ -30,3 +31,4 @@ h_x = 0.5
 calc_BTCS = BTCS.calculate_BTCS_pp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
 calc_BTCS = BTCS.calculate_BTCS_fp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
 calc_BTCS = BTCS.calculate_BTCS_ff(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)
+calc_CN = CN.calculate_CN_pp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x)

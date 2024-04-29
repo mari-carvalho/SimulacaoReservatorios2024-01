@@ -64,29 +64,6 @@ class CN():
         # Número Máximo de Interações:
         maxit = 1000
 
-        d_coeficientes = np.zeros((int(n_x)-1, int(n_x)-1))
-        def calculate_d_coeficientes(n_x, eta, rx, t):
-            ai = +1/2*eta*rx 
-            bi = 1/2 - rx*eta
-            an = +(2/3)*rx*eta
-            b1 = 1/2 - 2*rx*eta
-    
-            d_coeficientes = np.zeros((int(n_x)-1, int(n_x)-1))
-            for i in range(len(d_coeficientes)): # variando a linha
-                if i == 0:
-                    d_coeficientes[i,0] = b1
-                    d_coeficientes[i,1] = an
-                elif i == len(d_coeficientes)-1: # o último, N
-                    d_coeficientes[i,len(p_coeficientes)-2] = an
-                    d_coeficientes[i,len(p_coeficientes)-1] = b1
-                else:
-                    d_coeficientes[i,i-1] = ai # linha 1, coluna 0 (i-1)
-                    d_coeficientes[i,i] = bi
-                    d_coeficientes[i,i+1] = ai
-                    
-            print(d_coeficientes)
-            return d_coeficientes
-
         ai = -1/2*eta*rx 
         bi = 1/2 + rx*eta
         an = -(2/3)*rx*eta
@@ -102,21 +79,20 @@ class CN():
         for j in range(len(t)): # 0 a 4 (tamanho de t), tempo 4 elemento 5; 1 a 4 (tamanho de t, mesmo for), tempo 4 elemento 4; precisa de mais um elemento
             h = h + 1 
             p_coeficientes = np.zeros((int(n_x)-1, int(n_x)-1))
-            d_coeficientes = calculate_d_coeficientes(n_x, eta, rx, t)
             for i in range(len(p_coeficientes)): # variando a linha
                 if i == 0:
                     p_coeficientes[i,0] = b1
                     p_coeficientes[i,1] = an
-                    d[i] = d_coeficientes*p_old[i]  + 8/3*rx*eta*pw
+                    d[i] = (1/2 - 2*rx*eta)*p_old[i] + (2/3*rx*eta)*p_old[i+1] + 8/3*rx*eta*pw
                 elif i == len(p_coeficientes)-1: # o último, N
                     p_coeficientes[i,len(p_coeficientes)-2] = an
                     p_coeficientes[i,len(p_coeficientes)-1] = b1
-                    d[i] = d_coeficientes[i]*p_old[i] + 8/3*rx*eta*p0
+                    d[i] = (1/2 - 2*rx*eta)*p_old[i] + (2/3*rx*eta)*p_old[i-1] + 8/3*rx*eta*p0
                 else:
                     p_coeficientes[i,i-1] = ai # linha 1, coluna 0 (i-1)
                     p_coeficientes[i,i] = bi
                     p_coeficientes[i,i+1] = ai
-                    d[i] = p_old[i] # condição central é 0
+                    d[i] = (1/2 - rx*eta)*p_old[i] + (1/2*rx*eta)*p_old[i+1] + (1/2*rx*eta)*p_old[i-1]# condição central é 0
 
             x0 = p_old # os primeiros valores de chute inicial vão ser os valores de p calculadas no tempo anterior 
             p_new = gauss_seidel(p_coeficientes,d,x0,Eppara,maxit)
@@ -265,3 +241,4 @@ class CN():
         plt.ylabel('Pressão (psia)')
         plt.grid()
         plt.show()
+
