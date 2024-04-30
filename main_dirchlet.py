@@ -4,7 +4,7 @@
 
 import numpy as np 
 import math as mt
-from fluxo_linerar_dirchlet_aula import solucaoPressPress
+from fluxo_linerar_dirchlet import solucaoPressPress
 import matplotlib.pyplot as plt
 
 # Dados de Entrada:
