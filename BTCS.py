@@ -116,6 +116,7 @@ class BTCS():
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
         plt.legend()
+        plt.title('Formulação BTCS - Dirchlet')
         plt.xlabel('Comprimento (m)')
         plt.ylabel('Pressão (psia)')
         plt.grid()
@@ -237,6 +238,7 @@ class BTCS():
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
         plt.legend()
+        plt.title('Formulação BTCS - Neumann')
         plt.xlabel('Comprimento (m)')
         plt.ylabel('Pressão (psia)')
         plt.grid()
@@ -359,6 +361,7 @@ class BTCS():
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
         plt.legend()
+        plt.title('Formulação BTCS - F-F')
         plt.xlabel('Comprimento (m)')
         plt.ylabel('Pressão (psia)')
         plt.grid()

@@ -81,10 +81,13 @@ class FTCS():
                 plt.plot(x, p[i, :], linestyle='-', label=f't = {t[i]}')
 
         plt.legend()
+        plt.title('Formulação FTCS - Dirchlet')
         plt.xlabel('Comprimento (m)')
         plt.ylabel('Pressão (psia)')
         plt.grid()
         plt.show()
+
+        return x, p 
 
     def calculate_FTCS_fp(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
 
@@ -166,10 +169,13 @@ class FTCS():
                 plt.plot(x, p[i, :], linestyle='-', label=f't = {t[i]}')
 
         plt.legend()
+        plt.title('Formulação FTCS - Neumann')
         plt.xlabel('Comprimento (m)')
         plt.ylabel('Pressão (psia)')
         plt.grid()
         plt.show()
+
+        return x, p
     
     def calculate_FTCS_ff(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
 
@@ -251,6 +257,7 @@ class FTCS():
                 plt.plot(x, p[i, :], linestyle='-', label=f't = {t[i]}')
 
         plt.legend()
+        plt.title('Formulação FTCS - F-F')
         plt.xlabel('Comprimento (m)')
         plt.ylabel('Pressão (psia)')
         plt.grid()

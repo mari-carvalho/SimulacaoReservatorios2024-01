@@ -22,7 +22,7 @@ class solucaoPressPress:
         sum = 0 
         sum_old = 100
         err = 1000
-        eppara = 1e-3
+        eppara = 1e-1
         n = 0
         while err >= eppara:
             n += 1
@@ -32,3 +32,4 @@ class solucaoPressPress:
             sum_old = sum[i]
         p = (self.po - self.pw)*((x/self.l)+(2/np.pi)*sum)+self.pw
         return p
+    
