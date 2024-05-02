@@ -38,6 +38,7 @@ def calculate_h_t_calc():
         t_calc_array.append(t_calc)
 
     return x_calc_array, t_calc_array, p_calc_array
+    
 
 x_calc_array, t_calc_array, p_calc_array = calculate_h_t_calc()
 
