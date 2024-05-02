@@ -8,7 +8,7 @@ class FTCS():
 
         p0 = 19000000
         pw = 9000000
-        qw = 0.01
+        qw = 0
         q0 = 100
         cc = 'pp'
         mi = 0.001
@@ -30,7 +30,8 @@ class FTCS():
         x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
         t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
         p = np.zeros((int(n_t)+1,int(n_x)+1))
-
+        tam = len(x)
+        print('tam_ft', tam)
         # Alimentando os vetores:
         for i in range(len(x)):
             if i == 0:
@@ -194,7 +195,7 @@ class FTCS():
         plt.show()
 
         return x, p
-    
+
     def calculate_FTCS_ff(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,h_t,h_x):
 
         import numpy as np

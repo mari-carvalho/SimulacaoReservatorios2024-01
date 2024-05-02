@@ -30,7 +30,8 @@ def calculate_analitica_dirchlet(h_t):
     x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
     t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
     p = np.zeros((int(n_t)+1,int(n_x)+1))
-
+    tam = len(x)
+    print('tam_', tam)
     # Alimentando os vetores:
     for i in range(len(x)):
         if i == 0:
@@ -73,11 +74,24 @@ def calculate_analitica_dirchlet(h_t):
                 p_dirchlet_matriz[i, j] = solucao_dirchlet.PressPress(x[j], t[i]) # chamando a função # para cada valor de tempo (linhas), vai calcular um vetor de pressões com os valores de posição x, a linha da vez (tempo) por todas as colunas (posições x)
     print(p_dirchlet_matriz)
 
+    #for i in range(len(t)):
+    #    plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-') # vai plotar todo o vetor de x por cada um dos vetores de pressão gerados, na linha da vez (tempo) vai plotar todas as colunas (vetor de posições x) por todas as linhas (vetor de pressões gerado)
+    #plt.xlabel('x [m]')
+    #plt.ylabel('Pressão [kgf/cm²]')
+    #plt.grid(True)
+    #plt.show()
+
+    # Plotagem:
+    time = [0,10,20,30,40,50,60,70,80,90,100]
     for i in range(len(t)):
-        plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-') # vai plotar todo o vetor de x por cada um dos vetores de pressão gerados, na linha da vez (tempo) vai plotar todas as colunas (vetor de posições x) por todas as linhas (vetor de pressões gerado)
-    plt.xlabel('x [m]')
-    plt.ylabel('Pressão [kgf/cm²]')
-    plt.grid(True)
+        if t[i] in time:
+            plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-', label=f't = {t[i]}')
+
+    plt.legend()
+    plt.title('Solução Analítica - Dirchlet')
+    plt.xlabel('Comprimento (m)')
+    plt.ylabel('Pressão (psia)')
+    plt.grid()
     plt.show()
 
     return x, t, p_dirchlet_matriz

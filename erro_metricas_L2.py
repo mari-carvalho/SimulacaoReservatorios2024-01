@@ -43,8 +43,8 @@ x_calc_array, t_calc_array, p_calc_array = calculate_h_t_calc()
 
 # Cálculo do Erro:
 
-L2_list = []
-
+#L2_list = []
+'''
 for i in range(len(p_calc_array)): # acesso a matriz menor
     p_calc = p_calc_array[i]
     p_ex = p_ex_array[i]
@@ -56,12 +56,29 @@ for i in range(len(p_calc_array)): # acesso a matriz menor
     L2 = np.sqrt((1/(n_x**2))*sum)
     L2_list.append(L2)
 print('L2', L2_list)
+'''
+E_inf_list = []
+E_inf_antes_list = []
+E_inf_depois_list  = []
+for i in range(len(p_calc_array)): # acesso a matriz menor
+    p_calc = p_calc_array[i]
+    p_ex = p_ex_array[i]
+    sum = 0 
+    y_calc = p_calc[6]
+    y_ex = p_ex[6]
+    E_inf_antes = (y_ex[i] - y_calc[i])
+    E_inf_antes_list.append(E_inf_antes_list)
+    E_inf_depois = max(E_inf_antes_list)
+    E_inf_depois_list.append(E_inf_depois)
+
+print(E_inf_depois_list)
+
 
 # Plotagem:
 
-plt.plot(h_t, L2_list, linestyle='-', label='Erro Analítica/Explícita')
+plt.plot(h_t, E_inf_depois_list, linestyle='-', label='Erro Analítica/Explícita')
 
-plt.title('Norma L2')
+plt.title('Norma E$n \infty$')
 plt.legend()
 plt.xlabel('t [s]')
 plt.ylabel('L2')
