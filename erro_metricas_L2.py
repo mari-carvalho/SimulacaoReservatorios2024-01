@@ -88,6 +88,7 @@ for i in range(len(E_inf_depois_list)):
 # Norma E_abs
 
 err_abs_total_list = []
+#test
 
 for i in range(len(p_calc_array)): # acesso a matriz menor
     p_calc = p_calc_array[i]
