@@ -3,15 +3,35 @@ import math as mt
 import matplotlib.pyplot as plt
 from fluxo_linerar_dirchlet import solucaoPressPress
 
-def calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x):
+def calculate_analitica_dirchlet(h_t):
+        
+    p0 = 19000000
+    pw = 9000000
+    qw = 0.01
+    q0 = 100
+    cc = 'pp'
+    mi = 0.001
+    k = 9.869233e-14
+    h = 10 
+    phi = 0.2
+    c = 2.04e-9
+    L = 20
+    A = 30  
+    x0 = 0
+    xf = L
+    t0 = 0
+    tf = 100
+    h_x = 0.5
+
+    n_x = (xf-x0)/(h_x)
+    n_t = (tf-t0)/(h_t)
+    print('nx', n_x)
 
     x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
     t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
     p = np.zeros((int(n_t)+1,int(n_x)+1))
-
-    h_t = i
-    h_x = j
-
+    tam = len(x)
+    print('tam_', tam)
     # Alimentando os vetores:
     for i in range(len(x)):
         if i == 0:
@@ -54,17 +74,15 @@ def calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j
                 p_dirchlet_matriz[i, j] = solucao_dirchlet.PressPress(x[j], t[i]) # chamando a função # para cada valor de tempo (linhas), vai calcular um vetor de pressões com os valores de posição x, a linha da vez (tempo) por todas as colunas (posições x)
     print(p_dirchlet_matriz)
 
-    '''
-        for i in range(len(t)):
-            plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-') # vai plotar todo o vetor de x por cada um dos vetores de pressão gerados, na linha da vez (tempo) vai plotar todas as colunas (vetor de posições x) por todas as linhas (vetor de pressões gerado)
-        plt.xlabel('x [m]')
-        plt.ylabel('Pressão [kgf/cm²]')
-        plt.grid(True)
-        plt.show()
-    '''
+    #for i in range(len(t)):
+    #    plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-') # vai plotar todo o vetor de x por cada um dos vetores de pressão gerados, na linha da vez (tempo) vai plotar todas as colunas (vetor de posições x) por todas as linhas (vetor de pressões gerado)
+    #plt.xlabel('x [m]')
+    #plt.ylabel('Pressão [kgf/cm²]')
+    #plt.grid(True)
+    #plt.show()
 
     # Plotagem:
-    time = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    time = [0,10,20,30,40,50,60,70,80,90,100]
     for i in range(len(t)):
         if t[i] in time:
             plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-', label=f't = {t[i]}')
@@ -75,6 +93,5 @@ def calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j
     plt.ylabel('Pressão (psia)')
     plt.grid()
     plt.show()
-
 
     return x, t, p_dirchlet_matriz
