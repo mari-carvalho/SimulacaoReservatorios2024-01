@@ -4,7 +4,7 @@ import sympy as sp
 
 class FTCS():
 
-    def calculate_FTCS_pp(h_t):
+    def calculate_FTCS_pp(i, j):
 
         p0 = 19000000
         pw = 9000000
@@ -13,19 +13,20 @@ class FTCS():
         cc = 'pp'
         mi = 0.001
         k = 9.869233e-14
-        h = 10 
+        h = 10
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30  
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
-        h_x = 0.5
+        h_t = i
+        h_x = j
 
-        n_x = (xf-x0)/(h_x)
         n_t = (tf-t0)/(h_t)
+        n_x = (xf-x0)/(h_x)
 
         x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
         t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
