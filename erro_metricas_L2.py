@@ -5,6 +5,7 @@ from analitica_dirchlet import calculate_analitica_dirchlet
 from FTCS import FTCS
 from BTCS import BTCS
 from CN import CN
+from prettytable import PrettyTable
 
 p0 = 19000000
 pw = 9000000
@@ -137,7 +138,7 @@ tendencia = np.poly1d(coeffs) # cria um polinômio a partir dos coeficientes ret
 x_tendencia = np.linspace(min(h_t_log_list), max(h_t_log_list), 100) # cria um conjunto de pontos para suavizar a linha de tendência
 plt.plot(x_tendencia, tendencia(x_tendencia), color='green', linestyle='dashed', label='Linha de Tendência Linear')
 plt.plot(h_t_log_list, L2_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
-plt.title('Norma Euclidiana - L2')
+plt.title('Norma Euclidiana - Norma L2')
 plt.legend()
 plt.xlabel(r'$\bigtriangleup t$ [s]')
 plt.ylabel('ln (L2)')
@@ -152,7 +153,7 @@ tendencia = np.poly1d(coeffs) # cria um polinômio a partir dos coeficientes ret
 x_tendencia = np.linspace(min(h_t_log_list), max(h_t_log_list), 100) # cria um conjunto de pontos para suavizar a linha de tendência
 plt.plot(x_tendencia, tendencia(x_tendencia), color='green', linestyle='dashed', label='Linha de Tendência Linear')
 plt.plot(h_t_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
-plt.title('Norma E$ \infty$')
+plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
 plt.legend()
 plt.xlabel(r'$\bigtriangleup t$ [s]')
 plt.ylabel('ln (E$ \infty$)')
@@ -167,15 +168,20 @@ tendencia = np.poly1d(coeffs) # cria um polinômio a partir dos coeficientes ret
 x_tendencia = np.linspace(min(h_t_log_list), max(h_t_log_list), 100) # cria um conjunto de pontos para suavizar a linha de tendência
 plt.plot(x_tendencia, tendencia(x_tendencia), color='green', linestyle='dashed', label='Linha de Tendência Linear')
 plt.plot(h_t_log_list, err_rel_total_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
-plt.title('Norma Erro Relativo - L1')
+plt.title('Erro Relativo - Norma L1')
 plt.legend()
 plt.xlabel(r'$\bigtriangleup t$ [s]')
 plt.ylabel('ln (L1)')
 plt.show()
 
 # Tabelas:
+tabela = PrettyTable(['delta x', 'delta t', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
+for val1, val2, val3, val4 in zip(h_t, L2_log_list, E_inf_depois_log_list, err_rel_total_log_list):
+    n_x = n_x
+    tabela.add_row([n_x, val1,val2,val3,val4])
 
+print(tabela)
 
 
 
