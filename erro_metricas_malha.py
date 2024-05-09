@@ -142,30 +142,46 @@ for i in range(len(h_x)):
 print('h_t_log', h_x_log_list)
 
 # Plotagem:
-plt.plot(h_x_log_list, L2_log_list, linestyle='-', label='Erro Analítica/Explícita')
 
+# Ajustando uma linha de tendência:
+grau = 2
+coeffs = np.polyfit(h_x_log_list, L2_log_list, grau) # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
+tendencia = np.poly1d(coeffs) # cria um polinômio a partir dos coeficientes retornados por polyfit
+x_tendencia = np.linspace(min(h_x_log_list), max(h_x_log_list), 100) # cria um conjunto de pontos para suavizar a linha de tendência
+plt.plot(x_tendencia, tendencia(x_tendencia), color='green', linestyle='dashed', label='Linha de Tendência Linear')
+plt.plot(h_x_log_list, L2_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
 plt.title('Norma Euclidiana - L2')
 plt.legend()
-plt.xlabel('t [s]')
-plt.ylabel('L2')
+plt.xlabel(r'$\bigtriangleup x$ [s]')
+plt.ylabel('ln (L2)')
 plt.show()
 
 # Plotagem:
 
-plt.plot(h_x_log_list, E_inf_depois_log_list, linestyle='-', label='Erro Analítica/Explícita')
-
+# Ajustando uma linha de tendência:
+grau = 2
+coeffs = np.polyfit(h_x_log_list, E_inf_depois_log_list, grau) # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
+tendencia = np.poly1d(coeffs) # cria um polinômio a partir dos coeficientes retornados por polyfit
+x_tendencia = np.linspace(min(h_x_log_list), max(h_x_log_list), 100) # cria um conjunto de pontos para suavizar a linha de tendência
+plt.plot(x_tendencia, tendencia(x_tendencia), color='green', linestyle='dashed', label='Linha de Tendência Linear')
+plt.plot(h_x_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
 plt.title('Norma E$ \infty$')
 plt.legend()
-plt.xlabel('t [s]')
-plt.ylabel('L2')
+plt.xlabel(r'$\bigtriangleup x$ [s]')
+plt.ylabel('ln (E$ \infty$)')
 plt.show()
 
 # Plotagem:
 
-plt.plot(h_x_log_list, err_rel_total_log_list, linestyle='-', label='Erro Analítica/Explícita')
-
+# Ajustando uma linha de tendência:
+grau = 2
+coeffs = np.polyfit(h_x_log_list, err_rel_total_log_list, grau) # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
+tendencia = np.poly1d(coeffs) # cria um polinômio a partir dos coeficientes retornados por polyfit
+x_tendencia = np.linspace(min(h_x_log_list), max(h_x_log_list), 100) # cria um conjunto de pontos para suavizar a linha de tendência
+plt.plot(x_tendencia, tendencia(x_tendencia), color='green', linestyle='dashed', label='Linha de Tendência Linear')
+plt.plot(h_x_log_list, err_rel_total_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
 plt.title('Norma Erro Relativo - L1')
 plt.legend()
-plt.xlabel('t [s]')
-plt.ylabel('L2')
+plt.xlabel(r'$\bigtriangleup x$ [s]')
+plt.ylabel('ln (L1)')
 plt.show()
