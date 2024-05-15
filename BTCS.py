@@ -3,13 +3,18 @@ import time
 
 class BTCS():
 
-    def calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
         import numpy as np
         from solvers import solvers
         import matplotlib.pyplot as plt
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -122,15 +127,28 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação BTCS - Dirchlet - Guass Seidel')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação BTCS - Dirchlet - Gauss Seidel')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
         plt.show()
 
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Dirchlet - Gauss Seidel')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
+        plt.show()
+
         return x, t, p_solucoes
-    def calculate_BTCS_pp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_pp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
         import numpy as np
         import matplotlib.pyplot as plt
         import sympy as sp
@@ -138,6 +156,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -250,16 +273,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
         plt.title('Formulação BTCS - Dirchlet - TDMA')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Dirchlet - TDMA')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_pp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_pp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
         import numpy as np
         import matplotlib.pyplot as plt
         import sympy as sp
@@ -267,6 +303,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -379,16 +420,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
         plt.title('Formulação BTCS - Dirchlet - Jacobi')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Dirchlet - Jacobi')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_pp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_pp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
         import numpy as np
         import matplotlib.pyplot as plt
         import sympy as sp
@@ -396,6 +450,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -509,16 +568,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
         plt.title('Formulação BTCS - Dirchlet - Gauss Seidel Relaxamento')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Dirchlet - Gauss Seidel Relaxamento')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
         import numpy as np
         import matplotlib.pyplot as plt
         import sympy as sp
@@ -526,6 +598,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -639,16 +716,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
         plt.title('Formulação BTCS - Dirchlet - Solver Scipy')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Dirchlet - Solver Scipy')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
         import numpy as np
         import matplotlib.pyplot as plt 
@@ -657,6 +747,11 @@ class BTCS():
 
         x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
         t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -763,21 +858,34 @@ class BTCS():
         print('tam2', tam2)
 
         # Plotagem:
-        time = [0,10,20,30,40,50,60,70,80,90,100]
+        time = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
         for i in range(len(t)):
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação BTCS - Neumann - Gauss Seidel')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação BTCS - Nuemann - Gauss Seidel')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Neumann - Gauss Seidel')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_fp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_fp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
         import numpy as np
         import matplotlib.pyplot as plt
@@ -786,6 +894,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -900,16 +1013,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação BTCS - Neumann - TDMA')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação BTCS - Nuemann - TDMA')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Neumann - TDMA')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_fp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_fp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
         import numpy as np
         import matplotlib.pyplot as plt
@@ -918,6 +1044,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -1032,16 +1163,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação BTCS - Neumann - Jacobi')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação BTCS - Nuemann - Jacobi')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Neumann - Jacobi')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_fp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_fp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
         import numpy as np
         import matplotlib.pyplot as plt
@@ -1050,6 +1194,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -1165,16 +1314,29 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação BTCS - Neumann - Gauss Seidel Reaxamento')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação BTCS - Nuemann - Gauss Seidel Relaxamento')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Neumann - Gauss Seidel Relaxamento')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes
 
-    def calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
         import numpy as np
         import matplotlib.pyplot as plt
@@ -1183,6 +1345,11 @@ class BTCS():
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -1298,11 +1465,24 @@ class BTCS():
             if t[i] in time:
                 plt.plot(x, p_solucoes[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação BTCS - Neumann - Solver Scipy')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação BTCS - Nuemann - Solver Scipy')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p_solucoes[:-1, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação BTCS - Neumann - Solver Scipy')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p_solucoes

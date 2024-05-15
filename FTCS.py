@@ -4,13 +4,18 @@ import sympy as sp
 
 class FTCS():
 
-    def calculate_FTCS_pp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_FTCS_pp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
         x = np.zeros(int(n_x) + 1)  # de 0 ao tamanho do reservatório com 10 elementos na malha
         t = np.zeros(int(n_t) + 1)  # de 0 a 10 segundos com 10 elementos
         p = np.zeros((int(n_t) + 1, int(n_x) + 1))
         tam = len(x)
         print('tam_ft', tam)
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -92,21 +97,39 @@ class FTCS():
             if t[i] in time:
                 plt.plot(x, p[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
         plt.title('Formulação FTCS - Dirchlet')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p[:, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação FTCS - Dirchlet')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p, rxn_pp
 
-    def calculate_FTCS_fp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x):
+    def calculate_FTCS_fp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia):
 
 
         x = np.zeros(int(n_x)+1) # de 0 ao tamanho do reservatório com 10 elementos na malha 
         t = np.zeros(int(n_t)+1) # de 0 a 10 segundos com 10 elementos
         p = np.zeros((int(n_t)+1,int(n_x)+1))
+
+        if variancia == 'tempo':
+            v = 'Steps de Tempo'
+        elif variancia == 'malha':
+            v = 'Malha'
 
         h_t = i
         h_x = j
@@ -177,18 +200,31 @@ class FTCS():
                             p[i,j] = eta*rx*p[i-1,j-1] + (1-2*eta*rx)*p[i-1,j] + eta*rx*p[i-1,j+1]
 
         print(p)
-                    
+
         # Plotagem:
-        time = [0,10,20,30,40,50,60,70,80,90,100]
+        time = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
         for i in range(len(t)):
             if t[i] in time:
                 plt.plot(x, p[i, :], linestyle='-', label=f't = {t[i]}')
 
-        plt.legend()
-        plt.title('Formulação FTCS - Neumann')
-        plt.xlabel('Comprimento (m)')
-        plt.ylabel('Pressão (psia)')
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
+        plt.legend(labels=[legend_label])
+        plt.title('Formulação FTCS - Nuemann')
+        plt.xlabel('Comprimento [m]')
+        plt.ylabel('Pressão [Pa]')
         plt.grid()
+        plt.show()
+
+        #Plot 3D BTCS_pp
+        X, T = np.meshgrid(x, t)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, T, p[:, :], cmap='viridis')
+        ax.set_xlabel('Comprimento [m]')
+        ax.set_ylabel('Tempo [s]')
+        ax.set_zlabel('Pressão(x,y) [Pa]')
+        ax.set_title('Formulação FTCS - Neumann')
+        fig.text(0.02, 0.02, legend_label, color='black', ha='left')
         plt.show()
 
         return x, t, p, rxn_fp

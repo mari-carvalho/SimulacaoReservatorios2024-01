@@ -24,14 +24,15 @@ class tempo_computacional_pp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'tempo'
 
-        h_t = [0.2, 0.1]
-        h_x = 0.8
+        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_x = 0.5
         j = h_x
 
         tempos_totais = []
@@ -43,7 +44,7 @@ class tempo_computacional_pp():
 
         n_x = (xf - x0) / (h_x)
 
-        def calculate_h_t_calc_gs():
+        def calculate_h_t_calc_gs(variancia):
             x_calc_array_pp_gs = []
             t_calc_array_pp_gs = []
             p_calc_array_pp_gs = []
@@ -52,7 +53,7 @@ class tempo_computacional_pp():
             for i in h_t:
                 inicio_gs = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_pp_gs, t_calc_pp_gs, p_calc_pp_gs = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_gs, t_calc_pp_gs, p_calc_pp_gs = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gs = time.time()
                 tempo_total_gs = fim_gs - inicio_gs
 
@@ -64,7 +65,7 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_gs.append(tempo_total_gs)
             return x_calc_array_pp_gs, t_calc_array_pp_gs, p_calc_array_pp_gs, tempo_total_array_pp_gs, n_t_array
 
-        def calculate_h_t_calc_tdma():
+        def calculate_h_t_calc_tdma(variancia):
             x_calc_array_pp_tdma = []
             t_calc_array_pp_tdma = []
             p_calc_array_pp_tdma = []
@@ -73,7 +74,7 @@ class tempo_computacional_pp():
             for i in h_t:
                 inicio_tdma = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_pp_tdma, t_calc_pp_tdma, p_calc_pp_tdma = BTCS.calculate_BTCS_pp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_tdma, t_calc_pp_tdma, p_calc_pp_tdma = BTCS.calculate_BTCS_pp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_tdma = time.time()
                 tempo_total_tdma = fim_tdma - inicio_tdma
 
@@ -84,7 +85,7 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_tdma.append(tempo_total_tdma)
             return x_calc_array_pp_tdma, t_calc_array_pp_tdma, p_calc_array_pp_tdma, tempo_total_array_pp_tdma, n_t_array
 
-        def calculate_h_t_calc_jac():
+        def calculate_h_t_calc_jac(variancia):
             x_calc_array_pp_jac = []
             t_calc_array_pp_jac = []
             p_calc_array_pp_jac = []
@@ -93,7 +94,7 @@ class tempo_computacional_pp():
             for i in h_t:
                 inicio_jac = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_pp_jac, t_calc_pp_jac, p_calc_pp_jac = BTCS.calculate_BTCS_pp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_jac, t_calc_pp_jac, p_calc_pp_jac = BTCS.calculate_BTCS_pp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_jac = time.time()
                 tempo_total_jac = fim_jac - inicio_jac
 
@@ -105,7 +106,7 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_jac.append(tempo_total_jac)
             return x_calc_array_pp_jac, t_calc_array_pp_jac, p_calc_array_pp_jac, tempo_total_array_pp_jac, n_t_array
 
-        def calculate_h_t_calc_gsr():
+        def calculate_h_t_calc_gsr(variancia):
             x_calc_array_pp_gsr = []
             t_calc_array_pp_gsr= []
             p_calc_array_pp_gsr= []
@@ -114,7 +115,7 @@ class tempo_computacional_pp():
             for i in h_t:
                 inicio_gsr = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_pp_gsr, t_calc_pp_gsr, p_calc_pp_gsr = BTCS.calculate_BTCS_pp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_gsr, t_calc_pp_gsr, p_calc_pp_gsr = BTCS.calculate_BTCS_pp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gsr = time.time()
                 tempo_total_gsr = fim_gsr - inicio_gsr
 
@@ -125,7 +126,7 @@ class tempo_computacional_pp():
 
                 tempo_total_array_pp_gsr.append(tempo_total_gsr)
             return x_calc_array_pp_gsr, t_calc_array_pp_gsr, p_calc_array_pp_gsr, tempo_total_array_pp_gsr, n_t_array
-        def calculate_h_t_calc_solv():
+        def calculate_h_t_calc_solv(variancia):
             x_calc_array_pp_solv = []
             t_calc_array_pp_solv = []
             p_calc_array_pp_solv = []
@@ -134,7 +135,7 @@ class tempo_computacional_pp():
             for i in h_t:
                 inicio_solv = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_pp_solv, t_calc_pp_solv, p_calc_pp_solv = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_solv, t_calc_pp_solv, p_calc_pp_solv = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_solv = time.time()
                 tempo_total_solv = fim_solv - inicio_solv
 
@@ -146,15 +147,15 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_solv.append(tempo_total_solv)
             return x_calc_array_pp_solv, t_calc_array_pp_solv, p_calc_array_pp_solv, tempo_total_array_pp_solv, n_t_array
 
-        x_calc_array_pp_gs, t_calc_array_pp_gs, p_calc_array_pp_gs, tempo_total_array_pp_gs, n_t_array = calculate_h_t_calc_gs()
+        x_calc_array_pp_gs, t_calc_array_pp_gs, p_calc_array_pp_gs, tempo_total_array_pp_gs, n_t_array = calculate_h_t_calc_gs(variancia)
         tempos_totais.append(tempo_total_array_pp_gs)
-        x_calc_array_pp_tdma, t_calc_array_pp_tdma, p_calc_array_pp_tdma, tempo_total_array_pp_tdma, n_t_array = calculate_h_t_calc_tdma()
+        x_calc_array_pp_tdma, t_calc_array_pp_tdma, p_calc_array_pp_tdma, tempo_total_array_pp_tdma, n_t_array = calculate_h_t_calc_tdma(variancia)
         tempos_totais.append(tempo_total_array_pp_tdma)
-        x_calc_array_pp_jac, t_calc_array_pp_jac, p_calc_array_pp_jac, tempo_total_array_pp_jac, n_t_array = calculate_h_t_calc_jac()
+        x_calc_array_pp_jac, t_calc_array_pp_jac, p_calc_array_pp_jac, tempo_total_array_pp_jac, n_t_array = calculate_h_t_calc_jac(variancia)
         tempos_totais.append(tempo_total_array_pp_jac)
-        x_calc_array_pp_gsr, t_calc_array_pp_gsr, p_calc_array_pp_gsr, tempo_total_array_pp_gsr, n_t_array = calculate_h_t_calc_gsr()
+        x_calc_array_pp_gsr, t_calc_array_pp_gsr, p_calc_array_pp_gsr, tempo_total_array_pp_gsr, n_t_array = calculate_h_t_calc_gsr(variancia)
         tempos_totais.append(tempo_total_array_pp_gsr)
-        x_calc_array_pp_solv, t_calc_array_pp_solv, p_calc_array_pp_solv, tempo_total_array_pp_solv, n_t_array = calculate_h_t_calc_solv()
+        x_calc_array_pp_solv, t_calc_array_pp_solv, p_calc_array_pp_solv, tempo_total_array_pp_solv, n_t_array = calculate_h_t_calc_solv(variancia)
         tempos_totais.append(tempo_total_array_pp_solv)
 
         solvers = ['Guass Seidel', 'TDMA', 'Jacobi', 'Guass Seidel Relaxamento', 'Solver Scipy']
@@ -187,14 +188,15 @@ class tempo_computacional_pp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'malha'
 
-        h_x = [5, 4, 3, 2, 1]
-        h_t = 0.8
+        h_x = [0.4, 0.3, 0.2, 0.1]
+        h_t = 0.01
         i = h_t
 
         tempos_totais = []
@@ -206,7 +208,7 @@ class tempo_computacional_pp():
 
         n_t = (tf - t0) / (h_t)
 
-        def calculate_h_x_calc_gs():
+        def calculate_h_x_calc_gs(variancia):
             x_calc_array_pp_gs = []
             t_calc_array_pp_gs = []
             p_calc_array_pp_gs = []
@@ -215,7 +217,7 @@ class tempo_computacional_pp():
             for j in h_x:
                 inicio_gs = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_pp_gs, t_calc_pp_gs, p_calc_pp_gs = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_gs, t_calc_pp_gs, p_calc_pp_gs = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gs = time.time()
                 tempo_total_gs = fim_gs - inicio_gs
 
@@ -227,7 +229,7 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_gs.append(tempo_total_gs)
             return x_calc_array_pp_gs, t_calc_array_pp_gs, p_calc_array_pp_gs, tempo_total_array_pp_gs, n_x_array
 
-        def calculate_h_x_calc_tdma():
+        def calculate_h_x_calc_tdma(variancia):
             x_calc_array_pp_tdma = []
             t_calc_array_pp_tdma = []
             p_calc_array_pp_tdma = []
@@ -236,7 +238,7 @@ class tempo_computacional_pp():
             for j in h_x:
                 inicio_tdma = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_pp_tdma, t_calc_pp_tdma, p_calc_pp_tdma = BTCS.calculate_BTCS_pp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_tdma, t_calc_pp_tdma, p_calc_pp_tdma = BTCS.calculate_BTCS_pp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_tdma = time.time()
                 tempo_total_tdma = fim_tdma - inicio_tdma
 
@@ -247,7 +249,7 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_tdma.append(tempo_total_tdma)
             return x_calc_array_pp_tdma, t_calc_array_pp_tdma, p_calc_array_pp_tdma, tempo_total_array_pp_tdma, n_x_array
 
-        def calculate_h_x_calc_jac():
+        def calculate_h_x_calc_jac(variancia):
             x_calc_array_pp_jac = []
             t_calc_array_pp_jac = []
             p_calc_array_pp_jac = []
@@ -256,7 +258,7 @@ class tempo_computacional_pp():
             for j in h_x:
                 inicio_jac = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_pp_jac, t_calc_pp_jac, p_calc_pp_jac = BTCS.calculate_BTCS_pp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_jac, t_calc_pp_jac, p_calc_pp_jac = BTCS.calculate_BTCS_pp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_jac = time.time()
                 tempo_total_jac = fim_jac - inicio_jac
 
@@ -268,7 +270,7 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_jac.append(tempo_total_jac)
             return x_calc_array_pp_jac, t_calc_array_pp_jac, p_calc_array_pp_jac, tempo_total_array_pp_jac, n_x_array
 
-        def calculate_h_x_calc_gsr():
+        def calculate_h_x_calc_gsr(variancia):
             x_calc_array_pp_gsr = []
             t_calc_array_pp_gsr= []
             p_calc_array_pp_gsr= []
@@ -277,7 +279,7 @@ class tempo_computacional_pp():
             for j in h_x:
                 inicio_gsr = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_pp_gsr, t_calc_pp_gsr, p_calc_pp_gsr = BTCS.calculate_BTCS_pp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_gsr, t_calc_pp_gsr, p_calc_pp_gsr = BTCS.calculate_BTCS_pp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gsr = time.time()
                 tempo_total_gsr = fim_gsr - inicio_gsr
 
@@ -288,7 +290,7 @@ class tempo_computacional_pp():
 
                 tempo_total_array_pp_gsr.append(tempo_total_gsr)
             return x_calc_array_pp_gsr, t_calc_array_pp_gsr, p_calc_array_pp_gsr, tempo_total_array_pp_gsr, n_x_array
-        def calculate_h_x_calc_solv():
+        def calculate_h_x_calc_solv(variancia):
             x_calc_array_pp_solv = []
             t_calc_array_pp_solv = []
             p_calc_array_pp_solv = []
@@ -297,7 +299,7 @@ class tempo_computacional_pp():
             for j in h_x:
                 inicio_solv = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_pp_solv, t_calc_pp_solv, p_calc_pp_solv = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_pp_solv, t_calc_pp_solv, p_calc_pp_solv = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_solv = time.time()
                 tempo_total_solv = fim_solv - inicio_solv
 
@@ -309,15 +311,15 @@ class tempo_computacional_pp():
                 tempo_total_array_pp_solv.append(tempo_total_solv)
             return x_calc_array_pp_solv, t_calc_array_pp_solv, p_calc_array_pp_solv, tempo_total_array_pp_solv, n_x_array
 
-        x_calc_array_pp_gs, t_calc_array_pp_gs, p_calc_array_pp_gs, tempo_total_array_pp_gs, n_x_array = calculate_h_x_calc_gs()
+        x_calc_array_pp_gs, t_calc_array_pp_gs, p_calc_array_pp_gs, tempo_total_array_pp_gs, n_x_array = calculate_h_x_calc_gs(variancia)
         tempos_totais.append(tempo_total_array_pp_gs)
-        x_calc_array_pp_tdma, t_calc_array_pp_tdma, p_calc_array_pp_tdma, tempo_total_array_pp_tdma, n_x_array = calculate_h_x_calc_tdma()
+        x_calc_array_pp_tdma, t_calc_array_pp_tdma, p_calc_array_pp_tdma, tempo_total_array_pp_tdma, n_x_array = calculate_h_x_calc_tdma(variancia)
         tempos_totais.append(tempo_total_array_pp_tdma)
-        x_calc_array_pp_jac, t_calc_array_pp_jac, p_calc_array_pp_jac, tempo_total_array_pp_jac, n_x_array = calculate_h_x_calc_jac()
+        x_calc_array_pp_jac, t_calc_array_pp_jac, p_calc_array_pp_jac, tempo_total_array_pp_jac, n_x_array = calculate_h_x_calc_jac(variancia)
         tempos_totais.append(tempo_total_array_pp_jac)
-        x_calc_array_pp_gsr, t_calc_array_pp_gsr, p_calc_array_pp_gsr, tempo_total_array_pp_gsr, n_x_array = calculate_h_x_calc_gsr()
+        x_calc_array_pp_gsr, t_calc_array_pp_gsr, p_calc_array_pp_gsr, tempo_total_array_pp_gsr, n_x_array = calculate_h_x_calc_gsr(variancia)
         tempos_totais.append(tempo_total_array_pp_gsr)
-        x_calc_array_pp_solv, t_calc_array_pp_solv, p_calc_array_pp_solv, tempo_total_array_pp_solv, n_x_array = calculate_h_x_calc_solv()
+        x_calc_array_pp_solv, t_calc_array_pp_solv, p_calc_array_pp_solv, tempo_total_array_pp_solv, n_x_array = calculate_h_x_calc_solv(variancia)
         tempos_totais.append(tempo_total_array_pp_solv)
 
         solvers = ['Guass Seidel', 'TDMA', 'Jacobi', 'Guass Seidel Relaxamento', 'Solver Scipy']
@@ -352,14 +354,15 @@ class tempo_computacional_fp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'tempo'
 
-        h_t = [0.2, 0.1]
-        h_x = 0.8
+        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_x = 0.5
         j = h_x
 
         tempos_totais = []
@@ -371,7 +374,7 @@ class tempo_computacional_fp():
 
         n_x = (xf - x0) / (h_x)
 
-        def calculate_h_t_calc_gs():
+        def calculate_h_t_calc_gs(variancia):
             x_calc_array_fp_gs = []
             t_calc_array_fp_gs = []
             p_calc_array_fp_gs = []
@@ -380,7 +383,7 @@ class tempo_computacional_fp():
             for i in h_t:
                 inicio_gs = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_fp_gs, t_calc_fp_gs, p_calc_fp_gs = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_gs, t_calc_fp_gs, p_calc_fp_gs = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gs = time.time()
                 tempo_total_gs = fim_gs - inicio_gs
 
@@ -392,7 +395,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_gs.append(tempo_total_gs)
             return x_calc_array_fp_gs, t_calc_array_fp_gs, p_calc_array_fp_gs, tempo_total_array_fp_gs, n_t_array
 
-        def calculate_h_t_calc_tdma():
+        def calculate_h_t_calc_tdma(variancia):
             x_calc_array_fp_tdma = []
             t_calc_array_fp_tdma = []
             p_calc_array_fp_tdma = []
@@ -401,7 +404,7 @@ class tempo_computacional_fp():
             for i in h_t:
                 inicio_tdma = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_fp_tdma, t_calc_fp_tdma, p_calc_fp_tdma = BTCS.calculate_BTCS_fp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_tdma, t_calc_fp_tdma, p_calc_fp_tdma = BTCS.calculate_BTCS_fp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_tdma = time.time()
                 tempo_total_tdma = fim_tdma - inicio_tdma
 
@@ -413,7 +416,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_tdma.append(tempo_total_tdma)
             return x_calc_array_fp_tdma, t_calc_array_fp_tdma, p_calc_array_fp_tdma, tempo_total_array_fp_tdma, n_t_array
 
-        def calculate_h_t_calc_jac():
+        def calculate_h_t_calc_jac(variancia):
             x_calc_array_fp_jac = []
             t_calc_array_fp_jac = []
             p_calc_array_fp_jac = []
@@ -422,7 +425,7 @@ class tempo_computacional_fp():
             for i in h_t:
                 inicio_jac = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_fp_jac, t_calc_fp_jac, p_calc_fp_jac = BTCS.calculate_BTCS_fp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_jac, t_calc_fp_jac, p_calc_fp_jac = BTCS.calculate_BTCS_fp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_jac = time.time()
                 tempo_total_jac = fim_jac - inicio_jac
 
@@ -434,7 +437,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_jac.append(tempo_total_jac)
             return x_calc_array_fp_jac, t_calc_array_fp_jac, p_calc_array_fp_jac, tempo_total_array_fp_jac, n_t_array
 
-        def calculate_h_t_calc_gsr():
+        def calculate_h_t_calc_gsr(variancia):
             x_calc_array_fp_gsr = []
             t_calc_array_fp_gsr = []
             p_calc_array_fp_gsr = []
@@ -443,7 +446,7 @@ class tempo_computacional_fp():
             for i in h_t:
                 inicio_gsr = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_fp_gsr, t_calc_fp_gsr, p_calc_fp_gsr = BTCS.calculate_BTCS_fp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_gsr, t_calc_fp_gsr, p_calc_fp_gsr = BTCS.calculate_BTCS_fp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gsr= time.time()
                 tempo_total_gsr = fim_gsr - inicio_gsr
 
@@ -455,7 +458,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_gsr.append(tempo_total_gsr)
             return x_calc_array_fp_gsr, t_calc_array_fp_gsr, p_calc_array_fp_gsr, tempo_total_array_fp_gsr, n_t_array
 
-        def calculate_h_t_calc_solv():
+        def calculate_h_t_calc_solv(variancia):
             x_calc_array_fp_solv = []
             t_calc_array_fp_solv = []
             p_calc_array_fp_solv = []
@@ -464,7 +467,7 @@ class tempo_computacional_fp():
             for i in h_t:
                 inicio_solv = time.time()
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc_fp_solv, t_calc_fp_solv, p_calc_fp_solv = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_solv, t_calc_fp_solv, p_calc_fp_solv = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_solv = time.time()
                 tempo_total_solv = fim_solv - inicio_solv
 
@@ -477,15 +480,15 @@ class tempo_computacional_fp():
             return x_calc_array_fp_solv, t_calc_array_fp_solv, p_calc_array_fp_solv, tempo_total_array_fp_solv, n_t_array
 
 
-        x_calc_array_fp_gs, t_calc_array_fp_gs, p_calc_array_fp_gs, tempo_total_array_fp_gs, n_t_array = calculate_h_t_calc_gs()
+        x_calc_array_fp_gs, t_calc_array_fp_gs, p_calc_array_fp_gs, tempo_total_array_fp_gs, n_t_array = calculate_h_t_calc_gs(variancia)
         tempos_totais.append(tempo_total_array_fp_gs)
-        x_calc_array_fp_tdma, t_calc_array_fp_tdma, p_calc_array_fp_tdma, tempo_total_array_fp_tdma, n_t_array = calculate_h_t_calc_tdma()
+        x_calc_array_fp_tdma, t_calc_array_fp_tdma, p_calc_array_fp_tdma, tempo_total_array_fp_tdma, n_t_array = calculate_h_t_calc_tdma(variancia)
         tempos_totais.append(tempo_total_array_fp_tdma)
-        x_calc_array_fp_jac, t_calc_array_fp_jac, p_calc_array_fp_jac, tempo_total_array_fp_jac, n_t_array = calculate_h_t_calc_jac()
+        x_calc_array_fp_jac, t_calc_array_fp_jac, p_calc_array_fp_jac, tempo_total_array_fp_jac, n_t_array = calculate_h_t_calc_jac(variancia)
         tempos_totais.append(tempo_total_array_fp_jac)
-        x_calc_array_fp_gsr, t_calc_array_fp_gsr, p_calc_array_fp_gsr, tempo_total_array_fp_gsr, n_t_array = calculate_h_t_calc_gsr()
+        x_calc_array_fp_gsr, t_calc_array_fp_gsr, p_calc_array_fp_gsr, tempo_total_array_fp_gsr, n_t_array = calculate_h_t_calc_gsr(variancia)
         tempos_totais.append(tempo_total_array_fp_gsr)
-        x_calc_array_fp_solv, t_calc_array_fp_solv, p_calc_array_fp_solv, tempo_total_array_fp_solv, n_t_array = calculate_h_t_calc_solv()
+        x_calc_array_fp_solv, t_calc_array_fp_solv, p_calc_array_fp_solv, tempo_total_array_fp_solv, n_t_array = calculate_h_t_calc_solv(variancia)
         tempos_totais.append(tempo_total_array_fp_solv)
 
         solvers = ['Guass Seidel', 'TDMA', 'Jacobi', 'Guass Seidel Relaxamento', 'Solver Scipy']
@@ -519,14 +522,15 @@ class tempo_computacional_fp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'malha'
 
-        h_x = [5, 4, 3, 2, 1]
-        h_t = 0.8
+        h_x = [0.4, 0.3, 0.2, 0.1]
+        h_t = 0.01
         i = h_t
 
         tempos_totais = []
@@ -538,7 +542,7 @@ class tempo_computacional_fp():
 
         n_t = (tf - t0) / (h_t)
 
-        def calculate_h_x_calc_gs():
+        def calculate_h_x_calc_gs(variancia):
             x_calc_array_fp_gs = []
             t_calc_array_fp_gs = []
             p_calc_array_fp_gs = []
@@ -547,7 +551,7 @@ class tempo_computacional_fp():
             for j in h_x:
                 inicio_gs = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_fp_gs, t_calc_fp_gs, p_calc_fp_gs = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_gs, t_calc_fp_gs, p_calc_fp_gs = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gs = time.time()
                 tempo_total_gs = fim_gs - inicio_gs
 
@@ -559,7 +563,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_gs.append(tempo_total_gs)
             return x_calc_array_fp_gs, t_calc_array_fp_gs, p_calc_array_fp_gs, tempo_total_array_fp_gs, n_x_array
 
-        def calculate_h_x_calc_tdma():
+        def calculate_h_x_calc_tdma(variancia):
             x_calc_array_fp_tdma = []
             t_calc_array_fp_tdma = []
             p_calc_array_fp_tdma = []
@@ -568,7 +572,7 @@ class tempo_computacional_fp():
             for j in h_x:
                 inicio_tdma = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_fp_tdma, t_calc_fp_tdma, p_calc_fp_tdma = BTCS.calculate_BTCS_fp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_tdma, t_calc_fp_tdma, p_calc_fp_tdma = BTCS.calculate_BTCS_fp_tdma(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_tdma = time.time()
                 tempo_total_tdma = fim_tdma - inicio_tdma
 
@@ -580,7 +584,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_tdma.append(tempo_total_tdma)
             return x_calc_array_fp_tdma, t_calc_array_fp_tdma, p_calc_array_fp_tdma, tempo_total_array_fp_tdma, n_x_array
 
-        def calculate_h_x_calc_jac():
+        def calculate_h_x_calc_jac(variancia):
             x_calc_array_fp_jac = []
             t_calc_array_fp_jac = []
             p_calc_array_fp_jac = []
@@ -589,7 +593,7 @@ class tempo_computacional_fp():
             for j in h_x:
                 inicio_jac = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_fp_jac, t_calc_fp_jac, p_calc_fp_jac = BTCS.calculate_BTCS_fp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_jac, t_calc_fp_jac, p_calc_fp_jac = BTCS.calculate_BTCS_fp_jac(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_jac = time.time()
                 tempo_total_jac = fim_jac - inicio_jac
 
@@ -601,7 +605,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_jac.append(tempo_total_jac)
             return x_calc_array_fp_jac, t_calc_array_fp_jac, p_calc_array_fp_jac, tempo_total_array_fp_jac, n_x_array
 
-        def calculate_h_x_calc_gsr():
+        def calculate_h_x_calc_gsr(variancia):
             x_calc_array_fp_gsr = []
             t_calc_array_fp_gsr = []
             p_calc_array_fp_gsr = []
@@ -610,7 +614,7 @@ class tempo_computacional_fp():
             for j in h_x:
                 inicio_gsr = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_fp_gsr, t_calc_fp_gsr, p_calc_fp_gsr = BTCS.calculate_BTCS_fp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_gsr, t_calc_fp_gsr, p_calc_fp_gsr = BTCS.calculate_BTCS_fp_gsr(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_gsr= time.time()
                 tempo_total_gsr = fim_gsr - inicio_gsr
 
@@ -622,7 +626,7 @@ class tempo_computacional_fp():
                 tempo_total_array_fp_gsr.append(tempo_total_gsr)
             return x_calc_array_fp_gsr, t_calc_array_fp_gsr, p_calc_array_fp_gsr, tempo_total_array_fp_gsr, n_x_array
 
-        def calculate_h_x_calc_solv():
+        def calculate_h_x_calc_solv(variancia):
             x_calc_array_fp_solv = []
             t_calc_array_fp_solv = []
             p_calc_array_fp_solv = []
@@ -631,7 +635,7 @@ class tempo_computacional_fp():
             for j in h_x:
                 inicio_solv = time.time()
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_fp_solv, t_calc_fp_solv, p_calc_fp_solv = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc_fp_solv, t_calc_fp_solv, p_calc_fp_solv = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
                 fim_solv = time.time()
                 tempo_total_solv = fim_solv - inicio_solv
 
@@ -644,15 +648,15 @@ class tempo_computacional_fp():
             return x_calc_array_fp_solv, t_calc_array_fp_solv, p_calc_array_fp_solv, tempo_total_array_fp_solv, n_x_array
 
 
-        x_calc_array_fp_gs, t_calc_array_fp_gs, p_calc_array_fp_gs, tempo_total_array_fp_gs, n_x_array = calculate_h_x_calc_gs()
+        x_calc_array_fp_gs, t_calc_array_fp_gs, p_calc_array_fp_gs, tempo_total_array_fp_gs, n_x_array = calculate_h_x_calc_gs(variancia)
         tempos_totais.append(tempo_total_array_fp_gs)
-        x_calc_array_fp_tdma, t_calc_array_fp_tdma, p_calc_array_fp_tdma, tempo_total_array_fp_tdma, n_x_array = calculate_h_x_calc_tdma()
+        x_calc_array_fp_tdma, t_calc_array_fp_tdma, p_calc_array_fp_tdma, tempo_total_array_fp_tdma, n_x_array = calculate_h_x_calc_tdma(variancia)
         tempos_totais.append(tempo_total_array_fp_tdma)
-        x_calc_array_fp_jac, t_calc_array_fp_jac, p_calc_array_fp_jac, tempo_total_array_fp_jac, n_x_array = calculate_h_x_calc_jac()
+        x_calc_array_fp_jac, t_calc_array_fp_jac, p_calc_array_fp_jac, tempo_total_array_fp_jac, n_x_array = calculate_h_x_calc_jac(variancia)
         tempos_totais.append(tempo_total_array_fp_jac)
-        x_calc_array_fp_gsr, t_calc_array_fp_gsr, p_calc_array_fp_gsr, tempo_total_array_fp_gsr, n_x_array = calculate_h_x_calc_gsr()
+        x_calc_array_fp_gsr, t_calc_array_fp_gsr, p_calc_array_fp_gsr, tempo_total_array_fp_gsr, n_x_array = calculate_h_x_calc_gsr(variancia)
         tempos_totais.append(tempo_total_array_fp_gsr)
-        x_calc_array_fp_solv, t_calc_array_fp_solv, p_calc_array_fp_solv, tempo_total_array_fp_solv, n_x_array = calculate_h_x_calc_solv()
+        x_calc_array_fp_solv, t_calc_array_fp_solv, p_calc_array_fp_solv, tempo_total_array_fp_solv, n_x_array = calculate_h_x_calc_solv(variancia)
         tempos_totais.append(tempo_total_array_fp_solv)
 
         solvers = ['Guass Seidel', 'TDMA', 'Jacobi', 'Guass Seidel Relaxamento', 'Solver Scipy']

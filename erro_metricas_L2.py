@@ -23,14 +23,15 @@ class erros_pp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05]
-        h_x = 0.8
+        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_x = 0.5
         j = h_x
 
         def calculate_n_t(tf,t0,i):
@@ -40,7 +41,7 @@ class erros_pp_gs():
 
         n_x = (xf - x0) / (h_x)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -48,7 +49,7 @@ class erros_pp_gs():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_ex, t_ex, p_ex = analiticas.calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x)
+                x_ex, t_ex, p_ex = analiticas.calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x,variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -58,10 +59,10 @@ class erros_pp_gs():
             return x_ex_array, t_ex_array, p_ex_array, n_t_array
 
 
-        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex(variancia)
 
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -69,7 +70,7 @@ class erros_pp_gs():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -79,7 +80,7 @@ class erros_pp_gs():
             return x_calc_array, t_calc_array, p_calc_array, n_t_array
 
 
-        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -89,8 +90,8 @@ class erros_pp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[50] # selecinar a coluna
-            y_ex = p_ex[50] # selecinar a coluna
+            y_calc = p_calc[250] # selecinar a coluna
+            y_ex = p_ex[250] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -105,8 +106,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -122,8 +123,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -139,7 +140,7 @@ class erros_pp_gs():
         h_t_log_list = np.log(h_t)
 
         # Plotagem:
-        plt.plot(h_t_log_list, L2_list_tempo_pp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, L2_list_tempo_pp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -155,12 +156,12 @@ class erros_pp_gs():
         plt.plot(h_t_log_list, L2_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_t_log_list, E_inf_depois_list_tempo_pp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, E_inf_depois_list_tempo_pp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -176,12 +177,12 @@ class erros_pp_gs():
         plt.plot(h_t_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_t_log_list, err_rel_total_list_tempo_pp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, err_rel_total_list_tempo_pp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -197,7 +198,7 @@ class erros_pp_gs():
         plt.plot(h_t_log_list, err_rel_total_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -205,10 +206,10 @@ class erros_pp_gs():
         tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_t_val, L2_val, E_inf_val, err_rel_val in zip(n_t_array, L2_list_tempo_pp_gs, E_inf_depois_list_tempo_pp_gs, err_rel_total_list_tempo_pp_gs):
-            rounded_L2_val = round(L2_val, 3)
-            rounded_E_inf_val = round(E_inf_val, 3)
-            rounded_err_rel_val = round(err_rel_val, 3)
-            rounded_n_t_val = round(n_t_val, 3)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_t_val = round(n_t_val, 6)
             tabela.add_row([n_x, rounded_n_t_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -228,14 +229,15 @@ class erros_pp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'malha'
 
-        h_x = [5, 4, 3, 2, 1]
-        h_t = 0.8
+        h_x = [0.4, 0.3, 0.2, 0.1]
+        h_t = 0.01
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -245,7 +247,7 @@ class erros_pp_gs():
 
         n_t = (tf - t0) / (h_t)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -253,7 +255,7 @@ class erros_pp_gs():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_ex, t_ex, p_ex = analiticas.calculate_analitica_dirchlet(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -262,9 +264,9 @@ class erros_pp_gs():
 
             return x_ex_array, t_ex_array, p_ex_array, n_x_array
 
-        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex(variancia)
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -272,7 +274,7 @@ class erros_pp_gs():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -281,7 +283,7 @@ class erros_pp_gs():
 
             return x_calc_array, t_calc_array, p_calc_array, n_x_array
 
-        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -350,16 +352,16 @@ class erros_pp_gs():
         print('h_t_log', h_x_log_list)
 
         # Plotagem:
-        plt.plot(h_x_log_list, L2_list_malha_pp_gs, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, L2_list_malha_pp_gs, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('L2')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, L2_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -371,21 +373,21 @@ class erros_pp_gs():
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [s])')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, E_inf_depois_list_malha_pp_gs, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, E_inf_depois_list_malha_pp_gs, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('E$ \infty$')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, E_inf_depois_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -397,20 +399,20 @@ class erros_pp_gs():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, err_rel_total_list_malha_pp_gs, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
+        plt.plot(h_x, err_rel_total_list_malha_pp_gs, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('L1')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, err_rel_total_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -422,7 +424,7 @@ class erros_pp_gs():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -430,10 +432,10 @@ class erros_pp_gs():
         tabela = PrettyTable(['Steps de Tempo', 'N° de Blocos', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_x_val, L2_val, E_inf_val, err_rel_val in zip(n_x_array, L2_list_malha_pp_gs, E_inf_depois_list_malha_pp_gs, err_rel_total_list_malha_pp_gs):
-            rounded_L2_val = round(L2_val, 3)
-            rounded_E_inf_val = round(E_inf_val, 3)
-            rounded_err_rel_val = round(err_rel_val, 3)
-            rounded_n_x_val = round(n_x_val, 3)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_x_val = round(n_x_val, 6)
             tabela.add_row([n_t, rounded_n_x_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -454,14 +456,15 @@ class erros_fp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05]
-        h_x = 0.8
+        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_x = 0.5
         j = h_x
 
         def calculate_n_t(tf,t0,i):
@@ -471,7 +474,7 @@ class erros_fp_gs():
 
         n_x = (xf - x0) / (h_x)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -479,7 +482,7 @@ class erros_fp_gs():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_ex, t_ex, p_ex = analiticas.calculate_analitica_neumann(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x)
+                x_ex, t_ex, p_ex = analiticas.calculate_analitica_neumann(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -489,10 +492,10 @@ class erros_fp_gs():
             return x_ex_array, t_ex_array, p_ex_array, n_t_array
 
 
-        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex(variancia)
 
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -500,7 +503,7 @@ class erros_fp_gs():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -510,7 +513,7 @@ class erros_fp_gs():
             return x_calc_array, t_calc_array, p_calc_array, n_t_array
 
 
-        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -520,8 +523,8 @@ class erros_fp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[50] # selecinar a coluna
-            y_ex = p_ex[50] # selecinar a coluna
+            y_calc = p_calc[250] # selecinar a coluna
+            y_ex = p_ex[250] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -536,8 +539,8 @@ class erros_fp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -553,8 +556,8 @@ class erros_fp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -570,7 +573,7 @@ class erros_fp_gs():
         h_t_log_list = np.log(h_t)
 
         # Plotagem:
-        plt.plot(h_t_log_list, L2_list_tempo_fp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, L2_list_tempo_fp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -594,7 +597,7 @@ class erros_fp_gs():
         plt.plot(h_t_log_list, E_inf_depois_list_tempo_fp_gs, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('E$ \infty$')
         plt.show()
 
@@ -607,7 +610,7 @@ class erros_fp_gs():
         plt.plot(h_t_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
@@ -628,7 +631,7 @@ class erros_fp_gs():
         plt.plot(h_t_log_list, err_rel_total_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -636,10 +639,10 @@ class erros_fp_gs():
         tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_t_val, L2_val, E_inf_val, err_rel_val in zip(n_t_array, L2_list_tempo_fp_gs, E_inf_depois_list_tempo_fp_gs, err_rel_total_list_tempo_fp_gs):
-            rounded_L2_val = round(L2_val, 4)
-            rounded_E_inf_val = round(E_inf_val, 4)
-            rounded_err_rel_val = round(err_rel_val, 4)
-            rounded_n_t_val = round(n_t_val, 4)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_t_val = round(n_t_val, 6)
             tabela.add_row([n_x, rounded_n_t_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -659,14 +662,15 @@ class erros_fp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'malha'
 
-        h_x = [5, 4, 3, 2, 1]
-        h_t = 0.8
+        h_x = [0.4, 0.3, 0.2, 0.1]
+        h_t = 0.01
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -676,7 +680,7 @@ class erros_fp_gs():
 
         n_t = (tf - t0) / (h_t)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -684,7 +688,7 @@ class erros_fp_gs():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_ex, t_ex, p_ex = analiticas.calculate_analitica_neumann(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -693,9 +697,9 @@ class erros_fp_gs():
 
             return x_ex_array, t_ex_array, p_ex_array, n_x_array
 
-        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex(variancia)
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -703,7 +707,7 @@ class erros_fp_gs():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_calc, t_calc, p_calc = BTCS.calculate_BTCS_fp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -712,7 +716,7 @@ class erros_fp_gs():
 
             return x_calc_array, t_calc_array, p_calc_array, n_x_array
 
-        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -781,16 +785,16 @@ class erros_fp_gs():
         print('h_t_log', h_x_log_list)
 
         # Plotagem:
-        plt.plot(h_x_log_list, L2_list_malha_fp_gs, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, L2_list_malha_fp_gs, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('L2')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, L2_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -802,21 +806,21 @@ class erros_fp_gs():
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, E_inf_depois_list_malha_fp_gs, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, E_inf_depois_list_malha_fp_gs, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('E$ \infty$')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, E_inf_depois_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -828,20 +832,20 @@ class erros_fp_gs():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, err_rel_total_list_malha_fp_gs, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
+        plt.plot(h_x, err_rel_total_list_malha_fp_gs, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('L1')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, err_rel_total_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -853,7 +857,7 @@ class erros_fp_gs():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -861,10 +865,10 @@ class erros_fp_gs():
         tabela = PrettyTable(['Steps de Tempo', 'N° de Blocos', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_x_val, L2_val, E_inf_val, err_rel_val in zip(n_x_array, L2_list_malha_fp_gs, E_inf_depois_list_malha_fp_gs, err_rel_total_list_malha_fp_gs):
-            rounded_L2_val = round(L2_val, 4)
-            rounded_E_inf_val = round(E_inf_val, 4)
-            rounded_err_rel_val = round(err_rel_val, 4)
-            rounded_n_x_val = round(n_x_val, 4)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_x_val = round(n_x_val, 6)
             tabela.add_row([n_t, rounded_n_x_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -887,16 +891,16 @@ class erros_pp_solv():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05]
-        h_x = 0.8
+        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_x = 0.5
         j = h_x
-
         def calculate_n_t(tf,t0,i):
 
             n_t = (tf - t0) / (i)
@@ -904,7 +908,7 @@ class erros_pp_solv():
 
         n_x = (xf - x0) / (h_x)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -912,7 +916,7 @@ class erros_pp_solv():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_ex, t_ex, p_ex = analiticas.calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x)
+                x_ex, t_ex, p_ex = analiticas.calculate_analitica_dirchlet(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -922,10 +926,10 @@ class erros_pp_solv():
             return x_ex_array, t_ex_array, p_ex_array, n_t_array
 
 
-        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex(variancia)
 
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -933,7 +937,7 @@ class erros_pp_solv():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -943,7 +947,7 @@ class erros_pp_solv():
             return x_calc_array, t_calc_array, p_calc_array, n_t_array
 
 
-        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -953,8 +957,8 @@ class erros_pp_solv():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[50] # selecinar a coluna
-            y_ex = p_ex[50] # selecinar a coluna
+            y_calc = p_calc[250] # selecinar a coluna
+            y_ex = p_ex[250] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -969,8 +973,8 @@ class erros_pp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -986,8 +990,8 @@ class erros_pp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -1003,7 +1007,7 @@ class erros_pp_solv():
         h_t_log_list = np.log(h_t)
 
         # Plotagem:
-        plt.plot(h_t_log_list, L2_list_tempo_pp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, L2_list_tempo_pp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -1019,12 +1023,12 @@ class erros_pp_solv():
         plt.plot(h_t_log_list, L2_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s]')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_t_log_list, E_inf_depois_list_tempo_pp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, E_inf_depois_list_tempo_pp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -1040,12 +1044,12 @@ class erros_pp_solv():
         plt.plot(h_t_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s]')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_t_log_list, err_rel_total_list_tempo_pp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, err_rel_total_list_tempo_pp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -1061,7 +1065,7 @@ class erros_pp_solv():
         plt.plot(h_t_log_list, err_rel_total_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s]')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -1069,10 +1073,10 @@ class erros_pp_solv():
         tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_t_val, L2_val, E_inf_val, err_rel_val in zip(n_t_array, L2_list_tempo_pp_solv, E_inf_depois_list_tempo_pp_solv, err_rel_total_list_tempo_pp_solv):
-            rounded_L2_val = round(L2_val, 3)
-            rounded_E_inf_val = round(E_inf_val, 3)
-            rounded_err_rel_val = round(err_rel_val, 3)
-            rounded_n_t_val = round(n_t_val, 3)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_t_val = round(n_t_val, 6)
             tabela.add_row([n_x, rounded_n_t_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -1092,14 +1096,15 @@ class erros_pp_solv():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'malha'
 
-        h_x = [5, 4, 3, 2, 1]
-        h_t = 0.8
+        h_x = [0.4, 0.3, 0.2, 0.1]
+        h_t = 0.01
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -1109,7 +1114,7 @@ class erros_pp_solv():
 
         n_t = (tf - t0) / (h_t)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -1117,7 +1122,7 @@ class erros_pp_solv():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_ex, t_ex, p_ex = analiticas.calculate_analitica_dirchlet(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -1126,9 +1131,9 @@ class erros_pp_solv():
 
             return x_ex_array, t_ex_array, p_ex_array, n_x_array
 
-        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex(variancia)
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -1136,7 +1141,7 @@ class erros_pp_solv():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -1145,7 +1150,7 @@ class erros_pp_solv():
 
             return x_calc_array, t_calc_array, p_calc_array, n_x_array
 
-        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -1214,16 +1219,16 @@ class erros_pp_solv():
         print('h_t_log', h_x_log_list)
 
         # Plotagem:
-        plt.plot(h_x_log_list, L2_list_malha_pp_solv, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, L2_list_malha_pp_solv, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('L2')
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, L2_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -1235,12 +1240,12 @@ class erros_pp_solv():
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, E_inf_depois_list_malha_pp_solv, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, E_inf_depois_list_malha_pp_solv, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
@@ -1249,7 +1254,7 @@ class erros_pp_solv():
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, E_inf_depois_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -1261,12 +1266,12 @@ class erros_pp_solv():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, err_rel_total_list_malha_pp_solv, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
+        plt.plot(h_x, err_rel_total_list_malha_pp_solv, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup x$ [s]')
@@ -1286,7 +1291,7 @@ class erros_pp_solv():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -1294,10 +1299,10 @@ class erros_pp_solv():
         tabela = PrettyTable(['Steps de Tempo', 'N° de Blocos', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_x_val, L2_val, E_inf_val, err_rel_val in zip(n_x_array, L2_list_malha_pp_solv, E_inf_depois_list_malha_pp_solv, err_rel_total_list_malha_pp_solv):
-            rounded_L2_val = round(L2_val, 3)
-            rounded_E_inf_val = round(E_inf_val, 3)
-            rounded_err_rel_val = round(err_rel_val, 3)
-            rounded_n_x_val = round(n_x_val, 3)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_x_val = round(n_x_val, 6)
             tabela.add_row([n_t, rounded_n_x_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -1318,14 +1323,15 @@ class erros_fp_solv():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05]
-        h_x = 0.8
+        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_x = 0.5
         j = h_x
 
         def calculate_n_t(tf,t0,i):
@@ -1335,7 +1341,7 @@ class erros_fp_solv():
 
         n_x = (xf - x0) / (h_x)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -1343,7 +1349,7 @@ class erros_fp_solv():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_ex, t_ex, p_ex = analiticas.calculate_analitica_neumann(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x)
+                x_ex, t_ex, p_ex = analiticas.calculate_analitica_neumann(p0,pw,qw,q0,cc,mi,k,h,phi,c,L,A,x0,xf,t0,tf,i,j,n_t,n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -1353,10 +1359,10 @@ class erros_fp_solv():
             return x_ex_array, t_ex_array, p_ex_array, n_t_array
 
 
-        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_t_array = calculate_h_t_ex(variancia)
 
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -1364,7 +1370,7 @@ class erros_fp_solv():
             for i in h_t:
 
                 n_t = calculate_n_t(tf, t0, i)
-                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x)
+                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -1374,7 +1380,7 @@ class erros_fp_solv():
             return x_calc_array, t_calc_array, p_calc_array, n_t_array
 
 
-        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_t_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -1384,8 +1390,8 @@ class erros_fp_solv():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[50] # selecinar a coluna
-            y_ex = p_ex[50] # selecinar a coluna
+            y_calc = p_calc[250] # selecinar a coluna
+            y_ex = p_ex[250] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -1400,8 +1406,8 @@ class erros_fp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -1417,8 +1423,8 @@ class erros_fp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[50]
-            y_ex = p_ex[50]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -1434,7 +1440,7 @@ class erros_fp_solv():
         h_t_log_list = np.log(h_t)
 
         # Plotagem:
-        plt.plot(h_t_log_list, L2_list_tempo_fp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, L2_list_tempo_fp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -1450,12 +1456,12 @@ class erros_fp_solv():
         plt.plot(h_t_log_list, L2_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_t_log_list, E_inf_depois_list_tempo_fp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, E_inf_depois_list_tempo_fp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -1471,12 +1477,12 @@ class erros_fp_solv():
         plt.plot(h_t_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_t_log_list, err_rel_total_list_tempo_fp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
+        plt.plot(h_t, err_rel_total_list_tempo_fp_solv, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup t$ [s]')
@@ -1492,7 +1498,7 @@ class erros_fp_solv():
         plt.plot(h_t_log_list, err_rel_total_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup t$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -1500,10 +1506,10 @@ class erros_fp_solv():
         tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_t_val, L2_val, E_inf_val, err_rel_val in zip(n_t_array, L2_list_tempo_fp_solv, E_inf_depois_list_tempo_fp_solv, err_rel_total_list_tempo_fp_solv):
-            rounded_L2_val = round(L2_val, 4)
-            rounded_E_inf_val = round(E_inf_val, 4)
-            rounded_err_rel_val = round(err_rel_val, 4)
-            rounded_n_t_val = round(n_t_val, 4)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_t_val = round(n_t_val, 6)
             tabela.add_row([n_x, rounded_n_t_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -1523,14 +1529,15 @@ class erros_fp_solv():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 30
+        A = 200
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
+        variancia = 'malha'
 
-        h_x = [5, 4, 3, 2, 1]
-        h_t = 0.8
+        h_x = [0.4, 0.3, 0.2, 0.1]
+        h_t = 0.01
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -1540,7 +1547,7 @@ class erros_fp_solv():
 
         n_t = (tf - t0) / (h_t)
 
-        def calculate_h_t_ex():
+        def calculate_h_t_ex(variancia):
             x_ex_array = []
             t_ex_array = []
             p_ex_array = []
@@ -1548,7 +1555,7 @@ class erros_fp_solv():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_ex, t_ex, p_ex = analiticas.calculate_analitica_neumann(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_ex_array.append(x_ex)
                 p_ex_array.append(p_ex)
@@ -1557,9 +1564,9 @@ class erros_fp_solv():
 
             return x_ex_array, t_ex_array, p_ex_array, n_x_array
 
-        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex()
+        x_ex_array, t_ex_array, p_ex_array, n_x_array = calculate_h_t_ex(variancia)
 
-        def calculate_h_t_calc():
+        def calculate_h_t_calc(variancia):
             x_calc_array = []
             t_calc_array = []
             p_calc_array = []
@@ -1567,7 +1574,7 @@ class erros_fp_solv():
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
                 x_calc, t_calc, p_calc = BTCS.calculate_BTCS_fp_solv(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
-                                                                tf, i, j, n_t, n_x)
+                                                                tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
                 p_calc_array.append(p_calc)
@@ -1576,7 +1583,7 @@ class erros_fp_solv():
 
             return x_calc_array, t_calc_array, p_calc_array, n_x_array
 
-        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc()
+        x_calc_array, t_calc_array, p_calc_array, n_x_array = calculate_h_t_calc(variancia)
 
         # Cálculo do Erro:
 
@@ -1645,11 +1652,11 @@ class erros_fp_solv():
         print('h_t_log', h_x_log_list)
 
         # Plotagem:
-        plt.plot(h_x_log_list, L2_list_malha_fp_solv, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, L2_list_malha_fp_solv, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r'$\bigtriangleup x$ [m]')
         plt.ylabel('L2')
         plt.show()
 
@@ -1666,12 +1673,12 @@ class erros_fp_solv():
                  label='Erro Analítica/Explícita')
         plt.title('Norma Euclidiana - Norma L2')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L2)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, E_inf_depois_list_malha_fp_solv, linestyle='none', marker='o', color="#FF007F",
+        plt.plot(h_x, E_inf_depois_list_malha_fp_solv, linestyle='none', marker='o', color="#FF007F",
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
@@ -1680,7 +1687,7 @@ class erros_fp_solv():
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, E_inf_depois_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -1692,12 +1699,12 @@ class erros_fp_solv():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
         # Plotagem:
-        plt.plot(h_x_log_list, err_rel_total_list_malha_fp_solv, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
+        plt.plot(h_x, err_rel_total_list_malha_fp_solv, linestyle='none', marker='o', color="#FF007F",label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
         plt.xlabel(r'$\bigtriangleup x$ [s]')
@@ -1705,7 +1712,7 @@ class erros_fp_solv():
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, err_rel_total_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -1717,7 +1724,7 @@ class erros_fp_solv():
                  label='Erro Analítica/Explícita')
         plt.title('Erro Relativo - Norma L1')
         plt.legend()
-        plt.xlabel(r'$\bigtriangleup x$ [s]')
+        plt.xlabel(r' ln ($\bigtriangleup x$ [m])')
         plt.ylabel('ln (L1)')
         plt.show()
 
@@ -1725,10 +1732,10 @@ class erros_fp_solv():
         tabela = PrettyTable(['Steps de Tempo', 'N° de Blocos', 'Norma Euclidiana - L2', 'Erro Absoluto Máximo - E_inf', 'Erro Relativo - Norma L1'])
 
         for n_x_val, L2_val, E_inf_val, err_rel_val in zip(n_x_array, L2_list_malha_fp_solv, E_inf_depois_list_malha_fp_solv, err_rel_total_list_malha_fp_solv):
-            rounded_L2_val = round(L2_val, 4)
-            rounded_E_inf_val = round(E_inf_val, 4)
-            rounded_err_rel_val = round(err_rel_val, 4)
-            rounded_n_x_val = round(n_x_val, 4)
+            rounded_L2_val = round(L2_val, 6)
+            rounded_E_inf_val = round(E_inf_val, 6)
+            rounded_err_rel_val = round(err_rel_val, 6)
+            rounded_n_x_val = round(n_x_val, 6)
             tabela.add_row([n_t, rounded_n_x_val, rounded_L2_val, rounded_E_inf_val, rounded_err_rel_val])
 
         print(tabela)
@@ -1752,13 +1759,13 @@ tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'L2 - Dirchlet', 'L2 - 
 for n_t_val, L2_pp_gs_val, L2_fp_gs_val, E_inf_pp_gs_val,  E_inf_fp_gs_val, err_rel_pp_gs_val, err_rel_fp_gs_val in zip(n_t_array, L2_list_tempo_pp_gs,
                                                    L2_list_tempo_fp_gs, E_inf_depois_list_tempo_pp_gs, E_inf_depois_list_tempo_fp_gs,
                                                    err_rel_total_list_tempo_pp_gs, err_rel_total_list_tempo_fp_gs):
-    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 4)
-    rounded_E_inf_pp_gs_val = round(E_inf_pp_gs_val, 4)
-    rounded_err_rel_pp_gs_val = round(err_rel_pp_gs_val, 4)
-    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 4)
-    rounded_E_inf_fp_gs_val = round(E_inf_fp_gs_val, 4)
-    rounded_err_rel_fp_gs_val= round(err_rel_fp_gs_val, 4)
-    rounded_n_t_val = round(n_t_val, 4)
+    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 6)
+    rounded_E_inf_pp_gs_val = round(E_inf_pp_gs_val, 6)
+    rounded_err_rel_pp_gs_val = round(err_rel_pp_gs_val, 6)
+    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 6)
+    rounded_E_inf_fp_gs_val = round(E_inf_fp_gs_val, 6)
+    rounded_err_rel_fp_gs_val= round(err_rel_fp_gs_val, 6)
+    rounded_n_t_val = round(n_t_val, 6)
     tabela.add_row([n_x, rounded_n_t_val, rounded_L2_pp_gs_val, rounded_L2_fp_gs_val, rounded_E_inf_pp_gs_val, rounded_E_inf_fp_gs_val, rounded_err_rel_pp_gs_val, rounded_err_rel_fp_gs_val])
 
 print(tabela)
@@ -1770,13 +1777,13 @@ tabela = PrettyTable(['Steps de Tempo', 'N° de Blocos', 'L2 - Dirchlet', 'L2 - 
 for n_x_val, L2_pp_gs_val, L2_fp_gs_val, E_inf_pp_gs_val,  E_inf_fp_gs_val, err_rel_pp_gs_val, err_rel_fp_gs_val in zip(n_x_array, L2_list_malha_pp_gs,
                                                    L2_list_malha_fp_gs, E_inf_depois_list_malha_pp_gs, E_inf_depois_list_malha_fp_gs,
                                                    err_rel_total_list_malha_pp_gs, err_rel_total_list_malha_fp_gs):
-    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 4)
-    rounded_E_inf_pp_gs_val = round(E_inf_pp_gs_val, 4)
-    rounded_err_rel_pp_gs_val = round(err_rel_pp_gs_val, 4)
-    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 4)
-    rounded_E_inf_fp_gs_val = round(E_inf_fp_gs_val, 4)
-    rounded_err_rel_fp_gs_val= round(err_rel_fp_gs_val, 4)
-    rounded_n_x_val = round(n_x_val, 4)
+    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 6)
+    rounded_E_inf_pp_gs_val = round(E_inf_pp_gs_val, 6)
+    rounded_err_rel_pp_gs_val = round(err_rel_pp_gs_val, 6)
+    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 6)
+    rounded_E_inf_fp_gs_val = round(E_inf_fp_gs_val, 6)
+    rounded_err_rel_fp_gs_val= round(err_rel_fp_gs_val, 6)
+    rounded_n_x_val = round(n_x_val, 6)
     tabela.add_row([n_t, rounded_n_x_val, rounded_L2_pp_gs_val, rounded_L2_fp_gs_val, rounded_E_inf_pp_gs_val, rounded_E_inf_fp_gs_val, rounded_err_rel_pp_gs_val, rounded_err_rel_fp_gs_val])
 
 print(tabela)
@@ -1786,11 +1793,11 @@ tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'L2 - Dirchlet - GS', '
 
 for n_t_val, L2_pp_gs_val, L2_pp_solv_val, L2_fp_gs_val, L2_fp_solv_val in zip(n_t_array, L2_list_tempo_pp_gs, L2_list_tempo_pp_solv,
                                                    L2_list_tempo_fp_gs, L2_list_tempo_fp_solv):
-    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 4)
-    rounded_L2_pp_solv_val = round(L2_pp_solv_val, 4)
-    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 4)
-    rounded_L2_fp_solv_val = round(L2_fp_solv_val, 4)
-    rounded_n_t_val = round(n_t_val, 4)
+    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 6)
+    rounded_L2_pp_solv_val = round(L2_pp_solv_val, 6)
+    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 6)
+    rounded_L2_fp_solv_val = round(L2_fp_solv_val, 6)
+    rounded_n_t_val = round(n_t_val, 6)
     tabela.add_row([n_x, rounded_n_t_val, rounded_L2_pp_gs_val, rounded_L2_pp_solv_val, rounded_L2_fp_gs_val, rounded_L2_fp_solv_val])
 
 print(tabela)
@@ -1800,11 +1807,11 @@ tabela = PrettyTable(['Steps de Tempo', 'N° de Blocos', 'L2 - Dirchlet - GS', '
 
 for n_x_val, L2_pp_gs_val, L2_pp_solv_val, L2_fp_gs_val, L2_fp_solv_val in zip(n_x_array, L2_list_malha_pp_gs, L2_list_malha_pp_solv,
                                                    L2_list_malha_fp_gs, L2_list_malha_fp_solv):
-    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 4)
-    rounded_L2_pp_solv_val = round(L2_pp_solv_val, 4)
-    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 4)
-    rounded_L2_fp_solv_val = round(L2_fp_solv_val, 4)
-    rounded_n_x_val = round(n_x_val, 4)
+    rounded_L2_pp_gs_val = round(L2_pp_gs_val, 6)
+    rounded_L2_pp_solv_val = round(L2_pp_solv_val, 6)
+    rounded_L2_fp_gs_val = round(L2_fp_gs_val, 6)
+    rounded_L2_fp_solv_val = round(L2_fp_solv_val, 6)
+    rounded_n_x_val = round(n_x_val, 6)
     tabela.add_row([n_t, rounded_n_x_val, rounded_L2_pp_gs_val, rounded_L2_pp_solv_val, rounded_L2_fp_gs_val, rounded_L2_fp_solv_val])
 
 print(tabela)
