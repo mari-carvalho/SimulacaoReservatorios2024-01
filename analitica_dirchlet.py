@@ -65,7 +65,7 @@ class analiticas():
             if t[i] in time:
                 plt.plot(x, p_dirchlet_matriz[i, :], linestyle='-', label=f't = {t[i]}')
 
-        legend_label = f'{v} {n_x: .3f}' if variancia == "malha" else f'{v} {n_t: .3f}'
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
         plt.legend(labels=[legend_label])
         plt.title('Solução Analítica - Dirchlet')
         plt.xlabel('Comprimento [m]')
@@ -168,7 +168,7 @@ class analiticas():
             if t[i] in time:
                 plt.plot(x, p_neumann_matriz[i, :], linestyle='-', label=f't = {t[i]}')
 
-        legend_label = f'{v} {n_x: .3f}' if variancia == "malha" else f'{v} {n_t: .3f}'
+        legend_label = f'{v} {n_x: .2f}' if variancia == "malha" else f'{v} {n_t: .2f}'
         plt.legend(labels=[legend_label])
         plt.title('Solução Analítica - Neumann')
         plt.xlabel('Comprimento [m]')

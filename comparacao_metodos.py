@@ -62,7 +62,7 @@ class comparacao_metodos():
             for j in h_x:
 
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc_ftcs, t_calc_ftcs, T_calc_ftcs = FTCS.calculate_FTCS_pp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
+                x_calc_ftcs, t_calc_ftcs, P_calc_ftcs = FTCS.calculate_FTCS_pp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0, tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array_ftcs.append(x_calc_ftcs)
                 P_calc_array_ftcs.append(P_calc_ftcs)

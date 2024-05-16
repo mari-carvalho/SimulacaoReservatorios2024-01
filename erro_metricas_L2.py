@@ -610,7 +610,7 @@ class erros_fp_gs():
         plt.plot(h_t_log_list, E_inf_depois_log_list, linestyle='none', marker='o', color="#FF007F", label='Erro Analítica/Explícita')
         plt.title('Erro Absoluto Máximo - Norma E$ \infty$')
         plt.legend()
-        plt.xlabel(' ln ($\bigtriangleup t$ [s])')
+        plt.xlabel(r' ln ($\bigtriangleup t$ [s])')
         plt.ylabel('ln (E$ \infty$)')
         plt.show()
 
@@ -1279,7 +1279,7 @@ class erros_pp_solv():
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, err_rel_total_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
@@ -1661,7 +1661,7 @@ class erros_fp_solv():
         plt.show()
 
         # Ajustando uma linha de tendência nos Gráficos LogxLog:
-        grau = 2
+        grau = 1
         coeffs = np.polyfit(h_x_log_list, L2_log_list,
                             grau)  # ajusta a linha de tendência aos dados e retorna os coeficientes do polinômio
         tendencia = np.poly1d(coeffs)  # cria um polinômio a partir dos coeficientes retornados por polyfit
