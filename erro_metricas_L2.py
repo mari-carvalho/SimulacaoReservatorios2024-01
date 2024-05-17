@@ -30,8 +30,8 @@ class erros_pp_gs():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
-        h_x = 0.5
+        h_t = [0.8, 0.7042253521, 0.6024096386, 0.5, 0.4]
+        h_x = 0.2
         j = h_x
 
         def calculate_n_t(tf,t0,i):
@@ -90,8 +90,8 @@ class erros_pp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[250] # selecinar a coluna
-            y_ex = p_ex[250] # selecinar a coluna
+            y_calc = p_calc[:, 83] # selecinar a coluna
+            y_ex = p_ex[:, 83] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -106,8 +106,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 83]
+            y_ex = p_ex[:, 83]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -123,8 +123,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 83]
+            y_ex = p_ex[:, 83]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -236,8 +236,8 @@ class erros_pp_gs():
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [1, 0.5, 0.25, 0.125, 0.0625]
+        h_t = 0.1
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -293,8 +293,8 @@ class erros_pp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[:, 3]  # selecinar a coluna
-            y_ex = p_ex[:, 3]  # selecinar a coluna
+            y_calc = p_calc[915]  # selecinar a coluna
+            y_ex = p_ex[915]  # selecinar a coluna
             n_x = n_x_array[i]
             for k in range(len(y_ex)):  # acesso a cada linha
                 sum = sum + ((abs((y_ex[k] - y_calc[k]) / (y_ex[k]))) ** 2)
@@ -310,8 +310,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[915]
+            y_ex = p_ex[915]
             E_inf_antes_list = []
             n_x = n_x_array[i]
             for k in range(len(y_ex)):
@@ -328,8 +328,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[915]
+            y_ex = p_ex[915]
             err_rel_list = []
             sum = 0
             n_x = n_x_array[i]
@@ -463,8 +463,8 @@ class erros_fp_gs():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
-        h_x = 0.5
+        h_t = [10, 8, 5, 4, 2]
+        h_x = 0.2
         j = h_x
 
         def calculate_n_t(tf,t0,i):
@@ -523,8 +523,8 @@ class erros_fp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[250] # selecinar a coluna
-            y_ex = p_ex[250] # selecinar a coluna
+            y_calc = p_calc[:, 12] # selecinar a coluna
+            y_ex = p_ex[:, 12] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -539,8 +539,8 @@ class erros_fp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 12]
+            y_ex = p_ex[:, 12]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -556,8 +556,8 @@ class erros_fp_gs():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 12]
+            y_ex = p_ex[:, 12]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -669,8 +669,8 @@ class erros_fp_gs():
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [0.6, 0.5, 0.4, 0.2, 0.1]
+        h_t = 0.2
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -726,8 +726,8 @@ class erros_fp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[:, 3]  # selecinar a coluna
-            y_ex = p_ex[:, 3]  # selecinar a coluna
+            y_calc = p_calc[250]  # selecinar a coluna
+            y_ex = p_ex[250]  # selecinar a coluna
             n_x = n_x_array[i]
             for k in range(len(y_ex)):  # acesso a cada linha
                 sum = sum + ((abs((y_ex[k] - y_calc[k]) / (y_ex[k]))) ** 2)
@@ -743,8 +743,8 @@ class erros_fp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             n_x = n_x_array[i]
             for k in range(len(y_ex)):
@@ -761,8 +761,8 @@ class erros_fp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             n_x = n_x_array[i]
@@ -898,7 +898,7 @@ class erros_pp_solv():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_t = [0.8, 0.7, 0.6, 0.5, 0.4]
         h_x = 0.5
         j = h_x
         def calculate_n_t(tf,t0,i):
@@ -957,8 +957,8 @@ class erros_pp_solv():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[250] # selecinar a coluna
-            y_ex = p_ex[250] # selecinar a coluna
+            y_calc = p_calc[:, 12] # selecinar a coluna
+            y_ex = p_ex[:, 12] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -973,8 +973,8 @@ class erros_pp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 12]
+            y_ex = p_ex[:, 12]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -990,8 +990,8 @@ class erros_pp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 12]
+            y_ex = p_ex[:, 12]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -1103,8 +1103,8 @@ class erros_pp_solv():
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [0.6, 0.5, 0.4, 0.2, 0.1]
+        h_t = 0.2
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -1160,8 +1160,8 @@ class erros_pp_solv():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[:, 3]  # selecinar a coluna
-            y_ex = p_ex[:, 3]  # selecinar a coluna
+            y_calc = p_calc[250]  # selecinar a coluna
+            y_ex = p_ex[250]  # selecinar a coluna
             n_x = n_x_array[i]
             for k in range(len(y_ex)):  # acesso a cada linha
                 sum = sum + ((abs((y_ex[k] - y_calc[k]) / (y_ex[k]))) ** 2)
@@ -1177,8 +1177,8 @@ class erros_pp_solv():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             n_x = n_x_array[i]
             for k in range(len(y_ex)):
@@ -1195,8 +1195,8 @@ class erros_pp_solv():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             n_x = n_x_array[i]
@@ -1330,7 +1330,7 @@ class erros_fp_solv():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_t = [0.8, 0.7, 0.6, 0.5, 0.4]
         h_x = 0.5
         j = h_x
 
@@ -1390,8 +1390,8 @@ class erros_fp_solv():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[250] # selecinar a coluna
-            y_ex = p_ex[250] # selecinar a coluna
+            y_calc = p_calc[:, 12] # selecinar a coluna
+            y_ex = p_ex[:, 12] # selecinar a coluna
             for k in range(len(y_ex)): # acesso a cada linha
                 sum = sum + ((abs((y_ex[k]-y_calc[k])/(y_ex[k])))**2)
             L2 = np.sqrt((1/(n_x**2))*sum)
@@ -1406,8 +1406,8 @@ class erros_fp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 12]
+            y_ex = p_ex[:, 12]
             E_inf_antes_list = []
             for k in range(len(y_ex)):
                 E_inf_antes = abs((y_ex[k] - y_calc[k]))
@@ -1423,8 +1423,8 @@ class erros_fp_solv():
         for i in range(len(p_calc_array)): # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[250]
-            y_ex = p_ex[250]
+            y_calc = p_calc[:, 12]
+            y_ex = p_ex[:, 12]
             err_rel_list = []
             sum = 0
             for k in range(len(y_ex)):
@@ -1536,8 +1536,8 @@ class erros_fp_solv():
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [0.6, 0.5, 0.4, 0.2, 0.1]
+        h_t = 0.2
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -1593,8 +1593,8 @@ class erros_fp_solv():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[:, 3]  # selecinar a coluna
-            y_ex = p_ex[:, 3]  # selecinar a coluna
+            y_calc = p_calc[250]  # selecinar a coluna
+            y_ex = p_ex[250]  # selecinar a coluna
             n_x = n_x_array[i]
             for k in range(len(y_ex)):  # acesso a cada linha
                 sum = sum + ((abs((y_ex[k] - y_calc[k]) / (y_ex[k]))) ** 2)
@@ -1610,8 +1610,8 @@ class erros_fp_solv():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             E_inf_antes_list = []
             n_x = n_x_array[i]
             for k in range(len(y_ex)):
@@ -1628,8 +1628,8 @@ class erros_fp_solv():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[:, 3]
-            y_ex = p_ex[:, 3]
+            y_calc = p_calc[250]
+            y_ex = p_ex[250]
             err_rel_list = []
             sum = 0
             n_x = n_x_array[i]
@@ -1743,7 +1743,7 @@ class erros_fp_solv():
         return L2_list_malha_fp_solv, E_inf_depois_list_malha_fp_solv, err_rel_total_list_malha_fp_solv, n_x_array, n_t
 
 
-L2_list_tempo_pp_gs, E_inf_depois_list_tempo_pp_gs, err_rel_total_list_tempo_pp_gs, n_t_array, n_x = erros_pp_gs.calculate_erros_tempo()
+#L2_list_tempo_pp_gs, E_inf_depois_list_tempo_pp_gs, err_rel_total_list_tempo_pp_gs, n_t_array, n_x = erros_pp_gs.calculate_erros_tempo()
 L2_list_malha_pp_gs, E_inf_depois_list_malha_pp_gs, err_rel_total_list_malha_pp_gs, n_x_array, n_t = erros_pp_gs.calculate_erros_malha()
 L2_list_tempo_fp_gs, E_inf_depois_list_tempo_fp_gs, err_rel_total_list_tempo_fp_gs, n_t_array, n_x = erros_fp_gs.calculate_erros_tempo()
 L2_list_malha_fp_gs, E_inf_depois_list_malha_fp_gs, err_rel_total_list_malha_fp_gs, n_x_array, n_t = erros_fp_gs.calculate_erros_malha()
