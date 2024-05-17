@@ -328,7 +328,7 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[915]
+            y_calc = p_calc[915] # mariana
             y_ex = p_ex[915]
             err_rel_list = []
             sum = 0
