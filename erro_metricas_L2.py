@@ -236,7 +236,7 @@ class erros_pp_gs():
         tf = 100
         variancia = 'malha'
 
-        h_x = [1, 0.5, 0.25, 0.125, 0.0625]
+        h_x = [2, 1.333333333, 1, 0.8, 0.6666666667, 0.571428571, 0.5]
         h_t = 0.1
         i = h_t
 
@@ -273,7 +273,7 @@ class erros_pp_gs():
             n_x_array = []
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
+                x_calc, t_calc, p_calc, rxn_pp = FTCS.calculate_FTCS_pp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
                                                                 tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
@@ -293,8 +293,8 @@ class erros_pp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[915]  # selecinar a coluna
-            y_ex = p_ex[915]  # selecinar a coluna
+            y_calc = p_calc[907]  # selecinar a coluna
+            y_ex = p_ex[907]  # selecinar a coluna
             n_x = n_x_array[i]
             for k in range(len(y_ex)):  # acesso a cada linha
                 sum = sum + ((abs((y_ex[k] - y_calc[k]) / (y_ex[k]))) ** 2)
@@ -310,8 +310,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[915]
-            y_ex = p_ex[915]
+            y_calc = p_calc[907]
+            y_ex = p_ex[907]
             E_inf_antes_list = []
             n_x = n_x_array[i]
             for k in range(len(y_ex)):
@@ -328,8 +328,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[915] # mariana
-            y_ex = p_ex[915]
+            y_calc = p_calc[907] # mariana
+            y_ex = p_ex[907]
             err_rel_list = []
             sum = 0
             n_x = n_x_array[i]
@@ -346,7 +346,7 @@ class erros_pp_gs():
         h_x_log_list = []
         # Log de h_t
         for i in range(len(h_x)):
-            h_x_novo = (h_x[i]) ** 2
+            h_x_novo = (h_x[i])
             h_x_novo2 = np.log(h_x_novo)
             h_x_log_list.append(h_x_novo2)
         print('h_t_log', h_x_log_list)
