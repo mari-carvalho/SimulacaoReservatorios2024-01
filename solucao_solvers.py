@@ -13,6 +13,7 @@ import time
 class tempo_computacional_pp():
     def calculate_tempo_computacional_h_t():
 
+
         p0 = 19000000
         pw = 9000000
         qw = 0.01
@@ -24,15 +25,15 @@ class tempo_computacional_pp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
-        h_x = 0.5
+        h_t = [0.8, 0.7042253521, 0.6024096386, 0.5, 0.4]
+        h_x = 0.2
         j = h_x
 
         tempos_totais = []
@@ -188,15 +189,15 @@ class tempo_computacional_pp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [1, 0.5, 0.25, 0.125, 0.0625, 0.5]
+        h_t = 0.1
         i = h_t
 
         tempos_totais = []
@@ -343,6 +344,7 @@ class tempo_computacional_pp():
 class tempo_computacional_fp():
     def calculate_tempo_computacional_h_t():
 
+
         p0 = 19000000
         pw = 9000000
         qw = 0.01
@@ -354,15 +356,15 @@ class tempo_computacional_fp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
-        h_x = 0.5
+        h_t = [0.8, 0.7042253521, 0.6024096386, 0.5, 0.4]
+        h_x = 0.2
         j = h_x
 
         tempos_totais = []
@@ -522,15 +524,15 @@ class tempo_computacional_fp():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [1, 0.5, 0.25, 0.125, 0.0625, 0.5]
+        h_t = 0.1
         i = h_t
 
         tempos_totais = []

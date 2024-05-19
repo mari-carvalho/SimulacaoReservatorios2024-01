@@ -23,14 +23,14 @@ class estabilidade():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.2, 0.1, 0.05, 0.005]
+        h_t = [0.8, 0.5, 0.2, 0.1]
         h_x = 0.5
         j = h_x
 
@@ -118,15 +118,15 @@ class estabilidade():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.4, 0.3, 0.2, 0.1]
-        h_t = 0.01
+        h_x = [1, 0.5, 0.307692307, 0.2]
+        h_t = 0.1
         i = h_t
 
         tempos_totais = []

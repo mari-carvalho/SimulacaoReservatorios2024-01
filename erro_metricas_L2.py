@@ -23,7 +23,7 @@ class erros_pp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
@@ -229,16 +229,17 @@ class erros_pp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [2, 1.333333333, 1, 0.8, 0.6666666667, 0.571428571, 0.5]
+        h_x = [1, 0.5, 0.25, 0.125, 0.0625, 0.5]
         h_t = 0.1
         i = h_t
+
 
         def calculate_n_x(xf, x0, j):
 
@@ -273,7 +274,7 @@ class erros_pp_gs():
             n_x_array = []
             for j in h_x:
                 n_x = calculate_n_x(xf, x0, j)
-                x_calc, t_calc, p_calc, rxn_pp = FTCS.calculate_FTCS_pp(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
+                x_calc, t_calc, p_calc = BTCS.calculate_BTCS_pp_gs(p0, pw, qw, q0, cc, mi, k, h, phi, c, L, A, x0, xf, t0,
                                                                 tf, i, j, n_t, n_x, variancia)
 
                 x_calc_array.append(x_calc)
@@ -293,8 +294,8 @@ class erros_pp_gs():
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
             sum = 0
-            y_calc = p_calc[907]  # selecinar a coluna
-            y_ex = p_ex[907]  # selecinar a coluna
+            y_calc = p_calc[904]  # selecinar a coluna
+            y_ex = p_ex[904]  # selecinar a coluna
             n_x = n_x_array[i]
             for k in range(len(y_ex)):  # acesso a cada linha
                 sum = sum + ((abs((y_ex[k] - y_calc[k]) / (y_ex[k]))) ** 2)
@@ -310,8 +311,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[907]
-            y_ex = p_ex[907]
+            y_calc = p_calc[904]
+            y_ex = p_ex[904]
             E_inf_antes_list = []
             n_x = n_x_array[i]
             for k in range(len(y_ex)):
@@ -328,8 +329,8 @@ class erros_pp_gs():
         for i in range(len(p_calc_array)):  # acesso a matriz menor
             p_calc = p_calc_array[i]
             p_ex = p_ex_array[i]
-            y_calc = p_calc[907] # mariana
-            y_ex = p_ex[907]
+            y_calc = p_calc[904] # mariana
+            y_ex = p_ex[904]
             err_rel_list = []
             sum = 0
             n_x = n_x_array[i]
@@ -463,7 +464,7 @@ class erros_fp_gs():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [10, 8, 5, 4, 2]
+        h_t = [0.8, 0.7042253521, 0.6024096386, 0.5, 0.4]
         h_x = 0.2
         j = h_x
 
@@ -662,15 +663,15 @@ class erros_fp_gs():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.6, 0.5, 0.4, 0.2, 0.1]
-        h_t = 0.2
+        h_x = [1, 0.5, 0.25, 0.125, 0.0625, 0.5]
+        h_t = 0.1
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -898,8 +899,8 @@ class erros_pp_solv():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.8, 0.7, 0.6, 0.5, 0.4]
-        h_x = 0.5
+        h_t = [0.8, 0.7042253521, 0.6024096386, 0.5, 0.4]
+        h_x = 0.2
         j = h_x
         def calculate_n_t(tf,t0,i):
 
@@ -1096,15 +1097,15 @@ class erros_pp_solv():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.6, 0.5, 0.4, 0.2, 0.1]
-        h_t = 0.2
+        h_x = [2, 1.333333333, 1, 0.8, 0.6666666667, 0.571428571, 0.5]
+        h_t = 0.1
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -1330,8 +1331,8 @@ class erros_fp_solv():
         tf = 100
         variancia = 'tempo'
 
-        h_t = [0.8, 0.7, 0.6, 0.5, 0.4]
-        h_x = 0.5
+        h_t = [0.8, 0.7042253521, 0.6024096386, 0.5, 0.4]
+        h_x = 0.2
         j = h_x
 
         def calculate_n_t(tf,t0,i):
@@ -1529,15 +1530,15 @@ class erros_fp_solv():
         phi = 0.2
         c = 2.04e-9
         L = 20
-        A = 200
+        A = 30
         x0 = 0
         xf = L
         t0 = 0
         tf = 100
         variancia = 'malha'
 
-        h_x = [0.6, 0.5, 0.4, 0.2, 0.1]
-        h_t = 0.2
+        h_x = [2, 1.333333333, 1, 0.8, 0.6666666667, 0.571428571, 0.5]
+        h_t = 0.1
         i = h_t
 
         def calculate_n_x(xf, x0, j):
@@ -1745,12 +1746,12 @@ class erros_fp_solv():
 
 #L2_list_tempo_pp_gs, E_inf_depois_list_tempo_pp_gs, err_rel_total_list_tempo_pp_gs, n_t_array, n_x = erros_pp_gs.calculate_erros_tempo()
 L2_list_malha_pp_gs, E_inf_depois_list_malha_pp_gs, err_rel_total_list_malha_pp_gs, n_x_array, n_t = erros_pp_gs.calculate_erros_malha()
-L2_list_tempo_fp_gs, E_inf_depois_list_tempo_fp_gs, err_rel_total_list_tempo_fp_gs, n_t_array, n_x = erros_fp_gs.calculate_erros_tempo()
-L2_list_malha_fp_gs, E_inf_depois_list_malha_fp_gs, err_rel_total_list_malha_fp_gs, n_x_array, n_t = erros_fp_gs.calculate_erros_malha()
-L2_list_tempo_pp_solv, E_inf_depois_list_tempo_pp_solv, err_rel_total_list_tempo_pp_solv, n_t_array, n_x = erros_pp_solv.calculate_erros_tempo()
-L2_list_tempo_fp_solv, E_inf_depois_list_tempo_fp_solv, err_rel_total_list_tempo_fp_solv, n_t_array, n_x = erros_fp_solv.calculate_erros_tempo()
-L2_list_malha_pp_solv, E_inf_depois_list_malha_pp_solv, err_rel_total_list_malha_pp_solv, n_x_array, n_t = erros_pp_solv.calculate_erros_malha()
-L2_list_malha_fp_solv, E_inf_depois_list_malha_fp_solv, err_rel_total_list_malha_fp_solv, n_x_array, n_t = erros_fp_solv.calculate_erros_malha()
+#L2_list_tempo_fp_gs, E_inf_depois_list_tempo_fp_gs, err_rel_total_list_tempo_fp_gs, n_t_array, n_x = erros_fp_gs.calculate_erros_tempo()
+#L2_list_malha_fp_gs, E_inf_depois_list_malha_fp_gs, err_rel_total_list_malha_fp_gs, n_x_array, n_t = erros_fp_gs.calculate_erros_malha()
+#L2_list_tempo_pp_solv, E_inf_depois_list_tempo_pp_solv, err_rel_total_list_tempo_pp_solv, n_t_array, n_x = erros_pp_solv.calculate_erros_tempo()
+#L2_list_tempo_fp_solv, E_inf_depois_list_tempo_fp_solv, err_rel_total_list_tempo_fp_solv, n_t_array, n_x = erros_fp_solv.calculate_erros_tempo()
+#L2_list_malha_pp_solv, E_inf_depois_list_malha_pp_solv, err_rel_total_list_malha_pp_solv, n_x_array, n_t = erros_pp_solv.calculate_erros_malha()
+#L2_list_malha_fp_solv, E_inf_depois_list_malha_fp_solv, err_rel_total_list_malha_fp_solv, n_x_array, n_t = erros_fp_solv.calculate_erros_malha()
 
 # Tabelas Tempo:
 tabela = PrettyTable(['N° de Blocos', 'Steps de Tempo', 'L2 - Dirchlet', 'L2 - Neumann', 'EAM - Dirchlet', 'EAM - Neumann',
@@ -1815,3 +1816,4 @@ for n_x_val, L2_pp_gs_val, L2_pp_solv_val, L2_fp_gs_val, L2_fp_solv_val in zip(n
     tabela.add_row([n_t, rounded_n_x_val, rounded_L2_pp_gs_val, rounded_L2_pp_solv_val, rounded_L2_fp_gs_val, rounded_L2_fp_solv_val])
 
 print(tabela)
+
