@@ -40,8 +40,8 @@ Eppara = 0.5*10**(2-n) # Termo relativos
 maxit = 1000
 
 # Propriedades do Material - Cobre
-preq = 19000000
-pw = 9000000
+p0 = 19000000
+pwf = 9000000
 qw = 0.01
 q0 = 100
 cc = 'pp'
@@ -70,8 +70,8 @@ Pw = 0  # °C
 Pe = 0  # °C
 
 # Parâmetros de simulação
-nx = 20
-ny = 20
+nx = 4
+ny = 4
 N = nx * ny
 nt = 1000
 
@@ -152,9 +152,9 @@ while tempo < tempo_maximo:
         As = -ry*beta*kj_mais1
         An = -ry*beta*kj_menos1
         poco = nx/2
-        if i == poco and j == poco:
-            req = 0.5612*dx
-            S = Pold[m] + (((2*mt.pi*kw)/(phi*mi*c))*((pw-preq)/(dx*dy*(mt.ln(req/rw)))))
+        if i == poco and m == poco:
+            req = 0.5612*dx # Van Pollen:
+            S = Pold[m] + ((2 * mt.pi * kw) / (phi * mi * c)) * ((pwf - Pold[m]) / (dx * dy * (mt.log(req / rw))))
         else:
             S = Pold[m]
 
