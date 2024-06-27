@@ -8,6 +8,8 @@ Created on Wed Jun 26 16:27:51 2024
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import pandas as pd
+import math as mt
 
 def Gauss_Seidel(A, b, x0, Eppara, maxit):
     ne = len(b)
@@ -38,7 +40,7 @@ Eppara = 0.5*10**(2-n) # Termo relativos
 maxit = 1000
 
 # Propriedades do Material - Cobre
-p0 = 19000000
+preq = 19000000
 pw = 9000000
 qw = 0.01
 q0 = 100
@@ -52,21 +54,24 @@ L = 20
 A = 30
 x0 = 0
 xf = L
+rw = 10 
+kw = 50
 
-Lx = 10  # cm
-Ly = 10  # cm
+
+Lx = 20  # cm
+Ly = 20  # cm
 
 # Dados Iniciais
 tempo_maximo = 1000  # segundos
-Po = 19000000  # ºC
-Pn = 20  # ºC
-Ps = 0  # ºC
-Pw = 0  # ºC
-Pe = 0  # ºC
+Po = 19000000  # °C
+Pn = 0  # °C
+Ps = 0  # °C
+Pw = 0  # °C
+Pe = 0  # °C
 
 # Parâmetros de simulação
-nx = 4
-ny = 4
+nx = 20
+ny = 20
 N = nx * ny
 nt = 1000
 
@@ -119,7 +124,11 @@ while tempo < tempo_maximo:
     h += 1
 
     # Parte central
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    caminho_arquivo = 'mapa_perm.xlsx'
+    df = pd.read_excel(caminho_arquivo)
+    perm = df.values
+    print(perm)
+
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -142,7 +151,12 @@ while tempo < tempo_maximo:
         Ae = -rx*beta*ki_mais1
         As = -ry*beta*kj_mais1
         An = -ry*beta*kj_menos1
-        S = Pold[m]
+        poco = nx/2
+        if i == poco and j == poco:
+            req = 0.5612*dx
+            S = Pold[m] + (((2*mt.pi*kw)/(phi*mi*c))*((pw-preq)/(dx*dy*(mt.ln(req/rw)))))
+        else:
+            S = Pold[m]
 
         A[m,m] = Ap
         A[m,m-1] = Aw
@@ -152,7 +166,7 @@ while tempo < tempo_maximo:
         B[m] = S
     
     # Canto Superior Esquerdo
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for j in range(len(perm)):
         for i in range(len(perm)):
@@ -174,7 +188,7 @@ while tempo < tempo_maximo:
     B[m] = S
 
     # Fronteira Norte
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -197,7 +211,7 @@ while tempo < tempo_maximo:
       B[m] = S
 
     # Canto Superior Direito 
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -219,7 +233,7 @@ while tempo < tempo_maximo:
     B[m] = S
 
     # Fronteira Oeste
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -242,7 +256,7 @@ while tempo < tempo_maximo:
       B[m] = S
 
     # Fronteira Leste
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -265,7 +279,7 @@ while tempo < tempo_maximo:
       B[m] = S
 
     # Canto Inferior Esquerdo
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -287,7 +301,7 @@ while tempo < tempo_maximo:
     B[m] = S
 
     # Fronteira Sul
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -310,7 +324,7 @@ while tempo < tempo_maximo:
       B[m] = S
 
     # Canto Inferior Direito
-    perm = np.array([[2, 3, 4, 5], [6, 7, 8, 9], [10, 11, 12, 13], [14, 15, 16, 17]])
+    #perm = np.array([[2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2], [2, 2, 2, 2]])
     nx = len(perm)-1
     for i in range(len(perm)):
         for j in range(len(perm)):
@@ -348,21 +362,23 @@ while tempo < tempo_maximo:
 
 # Plot
 plt.figure()
-plt.imshow(P_new, extent=[0, Lx, 0, Ly], origin='lower', aspect='auto', cmap='hot')
+plt.imshow(perm, extent=[0, Lx, 0, Ly], origin='lower', aspect='auto', cmap='jet')
 plt.colorbar()
-plt.xlabel('X (cm)')
-plt.ylabel('Y (cm)')
-plt.title('Distribuição de Temperatura')
-
-plt.figure()
-ax = plt.axes(projection='3d')
-X, Y = np.meshgrid(np.linspace(0, Lx, nx), np.linspace(0, Ly, ny))
-ax.plot_surface(X, Y, P_new.P, cmap='viridis')
-ax.set_xlabel('X (cm)')
-ax.set_ylabel('Y (cm)')
-ax.set_zlabel('Temperatura (ºC)')
-plt.title('Superfície de Temperatura')
-
+plt.xlabel('X [m]')
+plt.ylabel('Y [m]')
+plt.title('Distribuição de Pressão')
 plt.show()
+
+# Plot
+plt.figure()
+plt.imshow(P_new, extent=[0, Lx, 0, Ly], origin='lower', aspect='auto', cmap='jet')
+plt.colorbar()
+plt.xlabel('X [m]')
+plt.ylabel('Y [m]')
+plt.title('Distribuição de Pressão')
+plt.show()
+
+
+
 
 print(f'Tempo de simulação: {time.time() - inicio:.2f} segundos')
