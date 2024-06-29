@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np 
 import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib.animation import FuncAnimation
@@ -6,6 +6,7 @@ import time
 import pandas as pd
 import math as mt
 from pandas import DataFrame as Df
+from scipy.interpolate import CubicSpline
 
 
 def plot_animation_map_2d(grid: dict):
@@ -108,7 +109,7 @@ q0 = 100
 cc = 'pp'
 mi = 0.001
 k = 9.869233e-14
-h = 10
+h_reser = 10
 phi = 0.2
 c = 2.04e-9
 L = 20
@@ -171,6 +172,8 @@ print(perm)
 poco = Lx / 2
 
 results = {}
+tempo_list = []
+results_matriz = []
 
 while tempo < tempo_maximo:
     h += 1
@@ -194,8 +197,8 @@ while tempo < tempo_maximo:
 
                 if i == poco and j == poco: # poço no centro
                     req = 0.5612 * dx
-                    Ap = 1 + beta * rx * (ki_menos1 + ki_mais1) + beta * ry * (kj_menos1 + kj_mais1) + ((2 * mt.pi * perm[i, j]) / (phi * mi * c * dx * dy * (mt.log(req / rw))))
-                    S = Pold[j] + ((2 * mt.pi * perm[i, j]) / (phi * mi * c * dx * dy * (mt.log(req / rw)))) * pwf
+                    Ap = 1 + beta * rx * (ki_menos1 + ki_mais1) + beta * ry * (kj_menos1 + kj_mais1) + ((2 * mt.pi * (perm[i, j]* 9.869233e-16)) / (phi * mi * c * dx * dy * (mt.log(req / rw))))
+                    S = Pold[j] + ((2 * mt.pi * (perm[i, j]* 9.869233e-16)) / (phi * mi * c * dx * dy * (mt.log(req / rw)))) * pwf
                 else:
                     Ap = 1 + beta * rx * (ki_menos1 + ki_mais1) + beta * ry * (kj_menos1 + kj_mais1)
                     S = Pold[j]
@@ -359,8 +362,10 @@ while tempo < tempo_maximo:
     Pold = P.copy()
     P_old = P_new.copy()
     tempo += dt
+    tempo_list.append(tempo)
 
     results[h] = Df(P_new)
+    results_matriz.append(P_new)
 
 
 plot_animation_map_2d(grid=results)
@@ -385,3 +390,56 @@ plt.title('Distribuição de Pressão')
 plt.show()
 
 print(f'Tempo de simulação: {time.time() - inicio:.2f} segundos')
+
+# Cálculo da Curva de Produção Acumulada:
+
+q_list = []
+np_new_list = []
+np = 0
+
+for i in range(len(tempo_list)):
+    linha_poco = int(poco)
+    coluna_poco = int(poco)
+    P = results_matriz[i] # pega os resultados de pressões daquele tempo 
+    q = (P[linha_poco, coluna_poco] - pwf) * ((2 * mt.pi * (perm[linha_poco, coluna_poco]* 9.869233e-16) * h_reser) / (mi * mt.log(req / rw)))
+    q_list.append(q)
+    if i == 0:
+        np_new = np + q*dt
+        np_new_list.append(np_new)
+    else:
+        np_new = np_new_list[i-1] + q*dt
+        np_new_list.append(np_new)
+        
+# Interpolação Cúbica para suavizar as Curvas:
+        
+cs = CubicSpline(tempo_list, q_list)
+cs2 = CubicSpline(tempo_list, np_new_list)
+
+# Criando novos pontos para a Interpolação:
+import numpy as np 
+
+tempo_smooth = np.linspace(min(tempo_list), max(tempo_list), 10000)
+q_smooth = cs(tempo_smooth)
+np_new_smooth = cs2(tempo_smooth)
+
+q_smooth_cm = q_smooth * 1000000
+
+# Plotando a Curva Vazão:
+    
+plt.plot(tempo_smooth, q_smooth_cm, color='#FF1493', linewidth=0.5, label='Vazão')
+
+plt.title('Vazão com Poço no Canto Superior Esquerdo')
+plt.legend()
+plt.xlabel('Tempo [s]')
+plt.ylabel('Vazão [cm³/s]')
+plt.show()
+
+# Plotando a Curva de Produção Acumulada:
+ 
+plt.plot(tempo_smooth, np_new_smooth, color='#0000FF', linewidth=0.5, label='Produção')
+
+plt.title('Produção Acumulada com Poço no Centro')
+plt.legend()
+plt.xlabel('Tempo [s]')
+plt.ylabel('Produção [m³]')
+plt.show()

@@ -141,7 +141,7 @@ Pe = 0  # °C
 nx = 20
 ny = 20
 N = nx * ny
-nt = 10
+nt = 100
 
 # Cálculos Iniciais
 dx = Lx / (nx - 1)
@@ -204,8 +204,8 @@ while tempo < tempo_maximo:
 
                 if i == poco -5 and j == poco -5: # poço a esquerda acima 
                     req = 0.5612 * dx
-                    Ap = 1 + beta * rx * (ki_menos1 + ki_mais1) + beta * ry * (kj_menos1 + kj_mais1) + ((2 * mt.pi * perm[i, j]) / (phi * mi * c * dx * dy * (mt.log(req / rw))))
-                    S = Pold[j] + ((2 * mt.pi * perm[i, j]) / (phi * mi * c * dx * dy * (mt.log(req / rw)))) * pwf
+                    Ap = 1 + beta * rx * (ki_menos1 + ki_mais1) + beta * ry * (kj_menos1 + kj_mais1) + ((2 * mt.pi * (perm[i, j]* 9.869233e-16)) / (phi * mi * c * dx * dy * (mt.log(req / rw))))
+                    S = Pold[j] + ((2 * mt.pi * (perm[i, j]* 9.869233e-16)) / (phi * mi * c * dx * dy * (mt.log(req / rw)))) * pwf
                 else:
                     Ap = 1 + beta * rx * (ki_menos1 + ki_mais1) + beta * ry * (kj_menos1 + kj_mais1)
                     S = Pold[j]
@@ -408,10 +408,10 @@ np_new_list = []
 np = 0
 
 for i in range(len(tempo_list)):
-    linha_poco = int(poco -5 )
-    coluna_poco = int(poco -5)
+    linha_poco = int(poco - 5)
+    coluna_poco = int(poco - 5)
     P = results_matriz[i] # pega os resultados de pressões daquele tempo 
-    q = (P[linha_poco, coluna_poco] - pwf) * ((2 * mt.pi * perm[linha_poco, coluna_poco] * h_reser) / (mi * mt.log(req / rw)))
+    q = (P[linha_poco, coluna_poco] - pwf) * ((2 * mt.pi * (perm[linha_poco, coluna_poco]* 9.869233e-16) * h_reser) / (mi * mt.log(req / rw)))
     q_list.append(q)
     if i == 0:
         np_new = np + q*dt
@@ -420,6 +420,7 @@ for i in range(len(tempo_list)):
         np_new = np_new_list[i-1] + q*dt
         np_new_list.append(np_new)
         
+
 # Interpolação Cúbica para suavizar as Curvas:
         
 cs = CubicSpline(tempo_list, q_list)
@@ -432,21 +433,23 @@ tempo_smooth = np.linspace(min(tempo_list), max(tempo_list), 10000)
 q_smooth = cs(tempo_smooth)
 np_new_smooth = cs2(tempo_smooth)
 
+q_smooth_cm = q_smooth * 1000000
+
 # Plotando a Curva Vazão:
     
-plt.plot(tempo_smooth, q_smooth, color='#FF1493', linewidth=1.5, label='Vazão')
+plt.plot(tempo_smooth, q_smooth_cm, color='#FF1493', linewidth=0.5, label='Vazão')
 
-plt.title('Vazão')
+plt.title('Vazão com Poço no Canto Superior Esquerdo')
 plt.legend()
 plt.xlabel('Tempo [s]')
-plt.ylabel('Vazão [m³/s]')
+plt.ylabel('Vazão [cm³/s]')
 plt.show()
 
 # Plotando a Curva de Produção Acumulada:
  
-plt.plot(tempo_smooth, np_new_smooth, color='#0000FF', linewidth=1.5, label='Produção')
+plt.plot(tempo_smooth, np_new_smooth, color='#0000FF', linewidth=0.5, label='Produção')
 
-plt.title('Produção Acumulada')
+plt.title('Produção Acumulada com Poço no Canto Superior Esquerdo')
 plt.legend()
 plt.xlabel('Tempo [s]')
 plt.ylabel('Produção [m³]')
