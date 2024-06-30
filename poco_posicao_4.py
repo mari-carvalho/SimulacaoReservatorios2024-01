@@ -399,13 +399,13 @@ plt.show()
 
 # Plot de tempos
 
-P_new = results_matriz[54]
+P_new = results_matriz[0]
 plt.figure()
 plt.imshow(P_new, extent=[0, Lx, 0, Ly], origin='upper', aspect='auto', cmap='jet')
 plt.colorbar()
 plt.xlabel('X [m]')
 plt.ylabel('Y [m]')
-plt.title(f'Distribuição de Pressão em {tempo_list[45]} segundos')
+plt.title(f'Distribuição de Pressão em {tempo_list[0]} segundos')
 plt.show()
 
 print(f'Tempo de simulação: {time.time() - inicio:.2f} segundos')

@@ -141,7 +141,7 @@ Pe = 0  # °C
 nx = 20
 ny = 20
 N = nx * ny
-nt = 100
+nt = 300
 
 # Cálculos Iniciais
 dx = Lx / (nx - 1)
@@ -171,7 +171,7 @@ h = 0
 # Definindo os índices da matriz 2D para o vetor 1D
 ind = np.arange(N).reshape(nx, ny)
 
-caminho_arquivo = 'mapa_perm_heterogeneo.xlsx'
+caminho_arquivo = 'mapa_perm.xlsx'
 df = pd.read_excel(caminho_arquivo)
 perm = df.values
 print(perm)
@@ -397,6 +397,18 @@ plt.xlabel('X [m]')
 plt.ylabel('Y [m]')
 plt.title('Distribuição de Pressão')
 plt.show()
+
+# Plot de tempos
+
+P_new = results_matriz[0]
+plt.figure()
+plt.imshow(P_new, extent=[0, Lx, 0, Ly], origin='upper', aspect='auto', cmap='jet')
+plt.colorbar()
+plt.xlabel('X [m]')
+plt.ylabel('Y [m]')
+plt.title(f'Distribuição de Pressão em {tempo_list[0]} segundos')
+plt.show()
+
 
 print(f'Tempo de simulação: {time.time() - inicio:.2f} segundos')
 

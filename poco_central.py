@@ -428,7 +428,7 @@ q_smooth_cm = q_smooth * 1000000
     
 plt.plot(tempo_smooth, q_smooth_cm, color='#FF1493', linewidth=0.5, label='Vazão')
 
-plt.title('Vazão com Poço no Canto Superior Esquerdo')
+plt.title('Vazão com Poço no Centro - Heterogêneo')
 plt.legend()
 plt.xlabel('Tempo [s]')
 plt.ylabel('Vazão [cm³/s]')
@@ -438,7 +438,7 @@ plt.show()
  
 plt.plot(tempo_smooth, np_new_smooth, color='#0000FF', linewidth=0.5, label='Produção')
 
-plt.title('Produção Acumulada com Poço no Centro')
+plt.title('Produção Acumulada com Poço no Centro - Heterogêneo')
 plt.legend()
 plt.xlabel('Tempo [s]')
 plt.ylabel('Produção [m³]')
