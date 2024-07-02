@@ -39,9 +39,9 @@ def plot_animation_map_2d(grid: dict):
                        norm=colors.Normalize(vmin=a, vmax=b)
                        )
 
-            plt.xlabel('Comprimento x (m)')
-            plt.ylabel('Comprimento y (m)')
-            plt.title("Mapa de Pressão")
+            plt.xlabel('Comprimento x [m]')
+            plt.ylabel('Comprimento y [m]')
+            plt.title("Distribuição de Pressão - Poço no Canto Superior Esquerdo")
             plt.tight_layout()
 
     # Configuração do gráfico
@@ -49,13 +49,13 @@ def plot_animation_map_2d(grid: dict):
     df_map = grid[times_key[0]]
     a = grid[times_key[-1]].min().min()
     b = grid[times_key[0]].max().max()
-    map_to_plot = plt.imshow(df_map, cmap='rainbow', interpolation='bicubic', origin='lower',
+    map_to_plot = plt.imshow(df_map, cmap='rainbow', interpolation='bicubic', origin='upper',
                              extent=(0, df_map.index.max(), 0, df_map.columns.max()),
                              norm=colors.Normalize(vmin=a, vmax=b))
     fig.colorbar(mappable=map_to_plot, ax=ax)
-    plt.xlabel('Comprimento x (m)')
-    plt.ylabel('Comprimento y (m)')
-    plt.title("Mapa de Pressão")
+    plt.xlabel('Comprimento x [m]')
+    plt.ylabel('Comprimento y [m]')
+    plt.title("Distribuição de Pressão - Poço no Canto Superior Esquerdo")
     plt.tight_layout()
     ani = FuncAnimation(fig, update, frames=len(times_key) - 1, interval=500)  # Intervalo de 1000ms entre frames
 
@@ -171,7 +171,7 @@ h = 0
 # Definindo os índices da matriz 2D para o vetor 1D
 ind = np.arange(N).reshape(nx, ny)
 
-caminho_arquivo = 'mapa_perm.xlsx'
+caminho_arquivo = 'mapa_perm_heterogeneo.xlsx'
 df = pd.read_excel(caminho_arquivo)
 perm = df.values
 print(perm)
@@ -379,6 +379,8 @@ while tempo < tempo_maximo:
 
 plot_animation_map_2d(grid=results)
 
+tempo_list_horas = np.array(tempo_list) / 3600
+
 
 # Plot
 plt.figure()
@@ -386,7 +388,7 @@ plt.imshow(perm, extent=[0, Lx, 0, Ly], origin='upper', aspect='auto', cmap='jet
 plt.colorbar()
 plt.xlabel('X [m]')
 plt.ylabel('Y [m]')
-plt.title('Distribuição de Pressão')
+plt.title('Distribuição de Permeabilidade - Poço no Canto Superior Esquerdo')
 plt.show()
 
 # Plot
@@ -395,9 +397,9 @@ plt.imshow(P_new, extent=[0, Lx, 0, Ly], origin='upper', aspect='auto', cmap='je
 plt.colorbar()
 plt.xlabel('X [m]')
 plt.ylabel('Y [m]')
-plt.title('Distribuição de Pressão')
+plt.title('Distribuição de Pressão - Poço no Canto Superior Esquerdo')
 plt.show()
-
+'''
 # Plot de tempos
 
 P_new = results_matriz[0]
@@ -406,10 +408,10 @@ plt.imshow(P_new, extent=[0, Lx, 0, Ly], origin='upper', aspect='auto', cmap='je
 plt.colorbar()
 plt.xlabel('X [m]')
 plt.ylabel('Y [m]')
-plt.title(f'Distribuição de Pressão em {tempo_list[0]} segundos')
+plt.title(f'Distribuição de Pressão em {tempo_list_horas[0]:.2f} segundos')
 plt.show()
 
-
+'''
 print(f'Tempo de simulação: {time.time() - inicio:.2f} segundos')
 
 
@@ -419,7 +421,7 @@ q_list = []
 np_new_list = []
 np = 0
 
-for i in range(len(tempo_list)):
+for i in range(len(tempo_list_horas)):
     linha_poco = int(poco - 5)
     coluna_poco = int(poco - 5)
     P = results_matriz[i] # pega os resultados de pressões daquele tempo 
@@ -435,13 +437,13 @@ for i in range(len(tempo_list)):
 
 # Interpolação Cúbica para suavizar as Curvas:
         
-cs = CubicSpline(tempo_list, q_list)
-cs2 = CubicSpline(tempo_list, np_new_list)
+cs = CubicSpline(tempo_list_horas, q_list)
+cs2 = CubicSpline(tempo_list_horas, np_new_list)
 
 # Criando novos pontos para a Interpolação:
 import numpy as np 
 
-tempo_smooth = np.linspace(min(tempo_list), max(tempo_list), 10000)
+tempo_smooth = np.linspace(min(tempo_list_horas), max(tempo_list_horas), 10000)
 q_smooth = cs(tempo_smooth)
 np_new_smooth = cs2(tempo_smooth)
 
@@ -453,7 +455,7 @@ plt.plot(tempo_smooth, q_smooth_cm, color='#FF1493', linewidth=0.5, label='Vazã
 
 plt.title('Vazão com Poço no Canto Superior Esquerdo')
 plt.legend()
-plt.xlabel('Tempo [s]')
+plt.xlabel('Tempo [h]')
 plt.ylabel('Vazão [cm³/s]')
 plt.show()
 
@@ -463,7 +465,7 @@ plt.plot(tempo_smooth, np_new_smooth, color='#0000FF', linewidth=0.5, label='Pro
 
 plt.title('Produção Acumulada com Poço no Canto Superior Esquerdo')
 plt.legend()
-plt.xlabel('Tempo [s]')
+plt.xlabel('Tempo [h]')
 plt.ylabel('Produção [m³]')
 plt.show()
 
